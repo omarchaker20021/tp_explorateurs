@@ -7,6 +7,11 @@ public class EnvironmentElement {
         this.block = block;
     }
 
+    public EnvironmentElement() {
+
+    }
+
+
     public Block getBlock() {
         return block;
     }
