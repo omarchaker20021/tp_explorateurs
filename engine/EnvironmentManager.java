@@ -2,6 +2,7 @@ package engine;
 
 import data.Environment;
 import data.Explorer;
+import data.Explorer;
 
 import java.util.ArrayList;
 import java.util.List;
