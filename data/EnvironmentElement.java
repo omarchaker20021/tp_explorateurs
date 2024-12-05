@@ -25,4 +25,13 @@ public class EnvironmentElement {
 		
 	}
 
+
+    public int getLine() {
+        return block.getLine();
+    }
+
+    public int getColumn() {
+        return block.getColumn();
+    }
+
 }

@@ -1,7 +1,15 @@
 package data;
 
 
+import java.util.ArrayList;
+
 public class Environment {
+
+    // Constantes
+    public static final int NUM_BLOCKS_PER_ZONE = 4;
+    public static final int NUM_ZONES = 4;
+
+    private ArrayList<EnvironmentElement> elements;
     private Block[][] blocks;
 
     private int lineCount;
@@ -12,6 +20,8 @@ public class Environment {
         this.columnCount = columnCount;
 
         blocks = new Block[lineCount][columnCount];
+
+        elements = new ArrayList<EnvironmentElement>();
 
         for (int lineIndex = 0; lineIndex < lineCount; lineIndex++) {
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
@@ -59,5 +69,35 @@ public class Environment {
     public boolean isOnBorder(Block block) {
         return isOnTop(block) || isOnBottom(block) || isOnLeftBorder(block) || isOnRightBorder(block);
     }
+
+    public ArrayList<EnvironmentElement> getElements() {
+        return elements;
+    }
+
+    public void addElement(EnvironmentElement element) {
+        elements.add(element);
+    }
+
+    public ArrayList<Obstacle> getObstacles(){
+        ArrayList<Obstacle> obstacles = null;
+        for (EnvironmentElement element : elements){
+            if (element instanceof Obstacle){
+                obstacles.add((Obstacle)element);
+            }
+        }
+        return obstacles;
+    }
+
+    public ArrayList<Treasure> getTreasures(){
+        ArrayList<Treasure> obstacles = null;
+        for (EnvironmentElement element : elements){
+            if (element instanceof Treasure){
+                obstacles.add((Treasure)element);
+            }
+        }
+        return obstacles;
+    }
+
+
 
 }
