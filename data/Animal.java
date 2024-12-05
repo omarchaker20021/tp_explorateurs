@@ -19,4 +19,9 @@ public class Animal extends Object{
     public void move(Block newblock){
         setPosition(newblock);
     }
+
+	public int getStrength() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

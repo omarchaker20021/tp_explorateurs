@@ -20,4 +20,9 @@ public class EnvironmentElement {
         this.block = block;
     }
 
+	public void setBlock(Block newBlock) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
