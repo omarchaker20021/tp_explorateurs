@@ -93,6 +93,13 @@ public class Utility {
         return position;
     }
 
+    public static ArrayList<Integer> getGraphicPosition(Block block){
+        ArrayList<Integer> position = new ArrayList<Integer>(2);
+        position.add(block.getColumn() * GameConfig.BLOCK_SIZE);
+        position.add(block.getLine() * GameConfig.BLOCK_SIZE);
+        return position;
+    }
+
 
     public static boolean isObstacleByBlock(Block block, Environment environment){
         EnvironmentElement element = getElementFromBlock(environment, block);
@@ -118,4 +125,8 @@ public class Utility {
             System.err.println(e.getMessage());
         }
     }
+
+//    public static void getZoneByBlock(Block block){
+//        return block.line
+//    }
 }

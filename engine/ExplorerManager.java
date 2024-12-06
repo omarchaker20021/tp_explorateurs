@@ -4,7 +4,6 @@ import data.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import engine.EnvironmentManager;
 
 public class ExplorerManager extends Thread {
     private Explorer explorer;
@@ -22,6 +21,8 @@ public class ExplorerManager extends Thread {
      * The train departs from the start point.
      */
     private boolean running = true;
+
+    private ArrayList<Integer> visitedZones = new ArrayList<Integer>();
 
     public ExplorerManager(Explorer explorer, Environment environment, EnvironmentManager environmentManager) {
         this.explorer = explorer;

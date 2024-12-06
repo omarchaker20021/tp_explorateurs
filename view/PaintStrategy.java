@@ -38,13 +38,43 @@ public class PaintStrategy {
             for (int columnIndex = 0; columnIndex < map.getColumnCount(); columnIndex++) {
                 Block block = blocks[lineIndex][columnIndex];
 
-//                if ((lineIndex + columnIndex) % 2 == 0) {
-//                    graphics.setColor(Color.GRAY);
-//                    graphics.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
-//                }
-                // Dessin des bordures
-                graphics.setColor(Color.BLACK); // Couleur des bordures
-                graphics.drawRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
+                if ((lineIndex < 4) && (columnIndex < 4)) {
+                    graphics.setColor(new Color(210, 105, 30)); // Marron orangé
+
+                    graphics.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
+                    if ((lineIndex+columnIndex) % 4 == 1){
+                        ArrayList<Integer> position = Utility.getGraphicPosition(block);
+
+                        graphics.drawImage(Utility.readImage("sprites/tent.png"),
+                                position.get(0), position.get(1), GameConfig.BLOCK_SIZE,
+                                GameConfig.BLOCK_SIZE, null);
+                    } else if ((lineIndex+columnIndex) % 4 == 3) {
+
+                        ArrayList<Integer> position = Utility.getGraphicPosition(block);
+
+                        graphics.drawImage(Utility.readImage("sprites/tent2.png"),
+                                position.get(0), position.get(1), GameConfig.BLOCK_SIZE,
+                                GameConfig.BLOCK_SIZE, null);
+                    }
+                }
+                else {
+                    graphics.setColor(new Color(85, 107, 47)); // Vert gazon
+
+                    graphics.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
+
+                    // Dessin des bordures
+                    graphics.setColor(Color.BLACK); // Couleur des bordures
+                    graphics.drawRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
+
+                    graphics.setColor(Color.BLACK); // Couleur des bordures
+                    ArrayList<Integer> position = Utility.getGraphicPosition(block);
+
+
+//                    graphics.drawImage(Utility.readImage("sprites/grass.png"),
+//                            position.get(0), position.get(1), GameConfig.BLOCK_SIZE,
+//                            GameConfig.BLOCK_SIZE, null);
+                }
+
             }
         }
 
@@ -90,7 +120,6 @@ public class PaintStrategy {
             else if (element instanceof Obstacle)
                 paintObstacle(graphics, (Obstacle) element);
 
-
             else if (element instanceof Animal)
                 paintAnimal(graphics, (Animal) element);
 
@@ -104,7 +133,7 @@ public class PaintStrategy {
      *
      *This method draws mobile characters on the map. It takes a list of MobileElementManager as parameter.
      *@param g - Graphics to draw on
-     *@param managers - list of MobileElementManager containing mobile characters to draw
+     *@param explorer - list of MobileElementManager containing mobile characters to draw
      */
 
     public static void paint(Explorer explorer, Graphics g) {
