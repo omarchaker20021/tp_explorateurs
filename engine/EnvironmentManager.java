@@ -2,7 +2,6 @@ package engine;
 
 import data.Block;
 import data.*;
-import data.Obstacle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +41,6 @@ public class EnvironmentManager {
 
             // Générer une direction aléatoire (0: haut, 1: bas, 2: gauche, 3: droite)
             int direction = random.nextInt(4);
-            System.out.println("Explorateur à (" + newLine + ", " + newColumn + "), direction : " + direction);
-
             switch (direction) {
                 case 0: newLine--; break; // Haut
                 case 1: newLine++; break; // Bas
@@ -51,13 +48,18 @@ public class EnvironmentManager {
                 case 3: newColumn++; break; // Droite
             }
 
-            // Vérifie que le déplacement est valide
-            if (isValidMove(newLine, newColumn)) {
-                Block newBlock = environment.getBlock(newLine, newColumn);
-                explorer.setBlock(newBlock);
-                System.out.println("Nouvelle position : (" + newLine + ", " + newColumn + ")");
-            } else {
-                System.out.println("Déplacement non valide pour l'explorateur.");
+            // Vérifier les limites
+            if (newLine >= 0 && newLine < environment.getLineCount()
+                    && newColumn >= 0 && newColumn < environment.getColumnCount()) {
+                Block targetBlock = environment.getBlock(newLine, newColumn);
+
+                // Vérifier si le bloc cible est un obstacle
+                if (!Utility.isObstacleByBlock(targetBlock, environment)) {
+                    explorer.setBlock(targetBlock);  // Met à jour la position de l'explorateur
+                    System.out.println("Explorer déplacé vers : (" + newLine + ", " + newColumn + ")");
+                } else {
+                    System.out.println("Obstacle détecté à la position (" + newLine + ", " + newColumn + "). Mouvement annulé.");
+                }
             }
         }
     }
