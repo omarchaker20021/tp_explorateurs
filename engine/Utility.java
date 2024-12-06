@@ -5,6 +5,7 @@ import data.Block;
 import data.Environment;
 import data.EnvironmentElement;
 import data.Obstacle;
+import data.Animal;
 
 import java.awt.*;
 
@@ -100,6 +101,11 @@ public class Utility {
         }
         return false;
 
+    }
+
+    public static boolean isAnimalByBlock(Block block, Environment environment){
+        EnvironmentElement element = getElementFromBlock(environment, block);
+        return element instanceof Animal;
     }
 
     /**

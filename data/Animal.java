@@ -16,12 +16,7 @@ public class Animal extends Objet {
         this.health = health;
     }
 
-    public void move(Block newblock){
-        setPosition(newblock);
-    }
-
-	public int getStrength() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+//    public int getStrength() {
+//        return 0;
+//    }
 }

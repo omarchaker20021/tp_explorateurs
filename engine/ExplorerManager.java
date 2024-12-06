@@ -1,15 +1,17 @@
 package engine;
 
-import data.Block;
-import data.Environment;
-import data.EnvironmentElement;
-import data.Explorer;
-import data.Treasure;
+import data.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import engine.EnvironmentManager;
 
 public class ExplorerManager extends Thread {
     private Explorer explorer;
 
     private Environment environment;
+
+    private EnvironmentManager environmentManager;
 
     /**
      * The trains has arrived at the terminus.
@@ -21,9 +23,10 @@ public class ExplorerManager extends Thread {
      */
     private boolean running = true;
 
-    public ExplorerManager(Explorer explorer, Environment environment) {
+    public ExplorerManager(Explorer explorer, Environment environment, EnvironmentManager environmentManager) {
         this.explorer = explorer;
         this.environment = environment;
+        this.environmentManager = environmentManager;
     }
 
     @Override
@@ -81,7 +84,9 @@ public class ExplorerManager extends Thread {
         explorer.getBlock().set(column, line);
     }
 
-    public void randomMove() {
+    public void randomMove(){
+        List<Explorer> deadExplorers = new ArrayList<>();
+
         Block currentBlock = explorer.getBlock();
         int newLine = currentBlock.getLine();
         int newColumn = currentBlock.getColumn();
@@ -119,12 +124,19 @@ public class ExplorerManager extends Thread {
             } else {
                 System.out.println("Obstacle détecté à la position (" + newLine + ", " + newColumn + "). Mouvement annulé.");
             }
+            if (Utility.isAnimalByBlock(newBlock, environment)) {
+                System.out.println("A rencontré un animal");
+                EnvironmentElement element = Utility.getElementFromBlock(environment, newBlock);
+                if(element instanceof Animal animal){
+                environmentManager.fight(explorer, animal);}
+            }
+//            Block newBlock = environment.getBlock(newLine, newColumn);
+            updatePosition(newColumn, newLine);
+            System.out.println("Nouvelle position : (" + newLine + ", " + newColumn + ")");
         } else {
             System.out.println("Déplacement non valide pour l'explorateur.");
         }
     }
-
-
 
     private boolean isValidMove(int line, int column) {
         Block block = environment.getBlock(line, column);

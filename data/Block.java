@@ -5,6 +5,8 @@ public class Block {
     private int line;
     private int column;
     private boolean isObstacle;
+    private Explorer explorer;
+    private Animal animal;
 
     public Block(int line, int column) {
         this.line = line;

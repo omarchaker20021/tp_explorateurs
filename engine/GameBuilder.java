@@ -11,6 +11,7 @@ import java.util.ArrayList;
  * @author tianxiao.liu@cyu.fr
  *
  */
+
 public class GameBuilder {
 
     public static Environment buildMap() {
@@ -21,6 +22,7 @@ public class GameBuilder {
      * @brief This function generates and initializes the elements of the game environment.
      * @return Map The environment with its elements.
      */
+
     public static Environment initMapElements(){
         Environment environment = new Environment(GameConfig.LINE_COUNT, GameConfig.COLUMN_COUNT);
 //        environment = generateRandomTreasures(5, environment);
@@ -33,7 +35,7 @@ public class GameBuilder {
         environment.addElement(treasure);
 
 
-        Animal animal = new Animal(new Block(7,7), 100);
+        Animal animal = new Animal(new Block(1,3), 100);
         environment.addElement(animal);
 
 
@@ -45,7 +47,7 @@ public class GameBuilder {
 
     }
 
-    public static ArrayList<ExplorerManager> buildInitMobile(Environment environment) {
+    public static ArrayList<ExplorerManager> buildInitMobile(Environment environment, EnvironmentManager environmentManager) {
 
 //        intializeExplorer(environment, manager);
 
@@ -59,7 +61,7 @@ public class GameBuilder {
         Explorer explorer = ExplorerFactory.constructExplorer(Explorer.COMMUNICATIVE_EXPLORER);
         explorer.setBlock(new Block(column, line));
 
-        ExplorerManager manager = new ExplorerManager(explorer, environment);
+        ExplorerManager manager = new ExplorerManager(explorer, environment, environmentManager);
 
         managers.add(manager);
 

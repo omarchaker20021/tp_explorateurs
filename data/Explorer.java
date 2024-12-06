@@ -55,7 +55,7 @@ public class Explorer extends EnvironmentElement {
         return EXPLORER_TYPE;
     }
 
-    @Override
+
     public void setBlock(Block newBlock) {
         super.setBlock(newBlock); // Mets à jour la position dans la classe parente
         System.out.println("Explorer déplacé vers : (" + newBlock.getLine() + ", " + newBlock.getColumn() + ")");
