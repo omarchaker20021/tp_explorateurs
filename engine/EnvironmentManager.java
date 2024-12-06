@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.lang.model.element.Element;
+
 public class EnvironmentManager {
     private Environment environment;
 
@@ -75,17 +77,31 @@ public class EnvironmentManager {
         if (explorerWins) {
             // L'explorateur gagne
             System.out.println("L'explorateur gagne le combat !");
-            //animal.getBlock().setAnimal(null); // Supprime l'animal de sa case
-            int healthLoss = random.nextInt(20) + 10; // Perte de santé entre 10 et 30
-            explorer.setHealth(explorer.getHealth() - healthLoss);
-            System.out.println("L'explorateur perd " + healthLoss + " points de santé.");
+            int damageToAnimal = random.nextInt(30) + 20; // Dégâts entre 20 et 50
+            animal.setHealth(animal.getHealth() - damageToAnimal);
+            System.out.println("L'animal perd " + damageToAnimal + " points de santé.");
         } else {
             // L'animal gagne
             System.out.println("L'animal gagne le combat !");
-            explorers.remove(explorer); // Supprime l'explorateur de la liste
+            int damageToExplorer = random.nextInt(30) + 20; // Dégâts entre 20 et 50
+            explorer.setHealth(explorer.getHealth() - damageToExplorer);
+            System.out.println("L'explorateur perd " + damageToExplorer + " points de santé.");
+        }
+
+        // Vérifiez si l'explorateur est mort
+        if (explorer.getHealth() <= 0) {
             System.out.println("L'explorateur est mort.");
+            explorers.remove(explorer); // Supprimer de la liste des explorateurs
+        }
+
+        // Vérifiez si l'animal est mort
+        if (animal.getHealth() <= 0) {
+            System.out.println("L'animal est mort.");
+            //animal.getBlock().setAnimal(null); // Supprimer l'animal du bloc
+            this.environment.getElements().remove(animal);
         }
     }
+
 
 
 

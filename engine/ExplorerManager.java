@@ -35,43 +35,17 @@ public class ExplorerManager extends Thread {
         while (running) {
             Utility.unitTime();
 
-//            Block position = explorer.getBlock();
-
+            // Déplacer l'explorateur
             randomMove();
-            System.out.println("Movement");
 
-
-            // The train will stay for a while at each station.
-//            Station station = line.getStation(position);
-//            if (station != null) {
-//                for (int stay = 1; stay <= station.getStayTime(); stay++) {
-//                    SimulationUtility.unitTime();
-//                }
-//            }
-
-//            int speed = train.getSpeed();
-//            int blockEndPoint = blockManager.getEndPoint();
-
-
-//            if (position + speed >= blockEndPoint) {
-//
-//                // We need to ask the entry into the block.
-//                if (blockEndPoint == line.getTotalLength()) {
-//                    atTerminus = true;
-//                } else {
-//                    BlockManager nextBlockManager = simulation.getBlockManager(blockEndPoint);
-//                    nextBlockManager.enter(this);
-//                }
-//            } else {
-//
-//                // The trains advances on the line.
-//                updatePosition(position + speed);
-//            }
+            // Vérifiez si l'explorateur est mort après le mouvement
+            if (explorer.getHealth() <= 0) {
+                System.out.println("L'explorateur est mort.");
+                running = false; // Arrête le thread si l'explorateur est mort
+            }
         }
-
-        // The train leaves the last occupied block.
-//        blockManager.exit();
     }
+
 
     public boolean isRunning() {
         return running;
@@ -85,7 +59,7 @@ public class ExplorerManager extends Thread {
         explorer.getBlock().set(column, line);
     }
 
-    public void randomMove(){
+    public void randomMove() {
         List<Explorer> deadExplorers = new ArrayList<>();
 
         Block currentBlock = explorer.getBlock();
@@ -118,6 +92,7 @@ public class ExplorerManager extends Thread {
                     Treasure treasure = (Treasure) element;
                     if (!treasure.isCollected()) {
                         treasure.collect(); // Collecte le trésor
+                        this.environment.getElements().remove(treasure);
                     } else {
                         System.out.println("Le trésor sur ce bloc a déjà été collecté.");
                     }
@@ -125,19 +100,29 @@ public class ExplorerManager extends Thread {
             } else {
                 System.out.println("Obstacle détecté à la position (" + newLine + ", " + newColumn + "). Mouvement annulé.");
             }
+
+            // Combat avec un animal
             if (Utility.isAnimalByBlock(newBlock, environment)) {
                 System.out.println("A rencontré un animal");
                 EnvironmentElement element = Utility.getElementFromBlock(environment, newBlock);
-                if(element instanceof Animal animal){
-                environmentManager.fight(explorer, animal);}
+                if (element instanceof Animal animal) {
+                    environmentManager.fight(explorer, animal);
+                }
             }
-//            Block newBlock = environment.getBlock(newLine, newColumn);
+
+            // Si l'explorateur est mort après le combat
+            if (explorer.getHealth() <= 0) {
+                System.out.println("L'explorateur est mort.");
+                running = false; // Arrêter le thread
+            }
+
             updatePosition(newColumn, newLine);
             System.out.println("Nouvelle position : (" + newLine + ", " + newColumn + ")");
         } else {
             System.out.println("Déplacement non valide pour l'explorateur.");
         }
     }
+
 
     private boolean isValidMove(int line, int column) {
         Block block = environment.getBlock(line, column);
