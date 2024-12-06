@@ -10,7 +10,6 @@ import data.Animal;
 import java.awt.*;
 
 import javax.imageio.ImageIO;
-import javax.swing.text.Position;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -126,7 +125,36 @@ public class Utility {
         }
     }
 
-//    public static void getZoneByBlock(Block block){
-//        return block.line
-//    }
+    public static boolean isElementNBlockNearElement(Environment map, Block elementPosition, int nbBlocks) {
+        int line = elementPosition.getLine();
+        int column = elementPosition.getColumn();
+        if(line + nbBlocks < map.getColumnCount()
+                && line - nbBlocks > 0
+                && column + nbBlocks < map.getLineCount()
+                && column - nbBlocks > 0) {
+            for(EnvironmentElement mapElement : map.getElements()) {
+                Block mapElementPosition = mapElement.getBlock();
+                int mapElementColumn = mapElementPosition.getColumn();
+                int mapElementLine = mapElementPosition.getLine();
+
+                if(mapElementColumn <= column + nbBlocks
+                        && mapElementColumn >= column - nbBlocks
+                        && mapElementLine <= line + nbBlocks
+                        && mapElementLine >= line - nbBlocks) {
+                    return true;
+                }
+
+            }
+            return false;
+        }
+        else {
+            return true;
+        }
+
+    }
+
+    public static int getZoneByBlock(Block block) {
+        return (block.getLine() / 4) * 4 + (block.getColumn() / 4);
+    }
+
 }
