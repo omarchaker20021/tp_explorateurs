@@ -25,11 +25,11 @@ public class GameBuilder {
 
     public static Environment initMapElements(){
         Environment environment = new Environment(GameConfig.LINE_COUNT, GameConfig.COLUMN_COUNT);
-//        environment = generateRandomTreasures(5, environment);
+        environment = generateRandomTreasures(5, environment);
 //        environment.addElements(initForestsByTreasures(environment.getElements()));
-//        environment.addElements(initObstacles(10, environment));
+        ArrayList<EnvironmentElement> obstacles = initObstacles(10, environment);
 
-        ArrayList<EnvironmentElement> elements = environment.getElements();
+        environment.addElements(initObstacles(10, environment));
 
         Treasure treasure = new Treasure(new Block(1,5));
         environment.addElement(treasure);
@@ -54,9 +54,19 @@ public class GameBuilder {
         ArrayList<ExplorerManager> managers = new ArrayList<>();
 
 
-        // Generation d'un explorateur dans le qg
-        int line = Utility.getRandomNumber(0, 3);
-        int column = Utility.getRandomNumber(0, 3);
+        // Générer une ligne aléatoire (0 à 3)
+        int line = Utility.getRandomNumber(0, 4);
+
+        // Générer une colonne en fonction de la ligne
+        int column;
+        if (line % 2 == 0) {
+            // Lignes paires (0 et 2)
+            column = (Utility.getRandomNumber(0,1) == 1) ? 1 : 3;
+        } else {
+            // Lignes impaires (1 et 3)
+            column = (Utility.getRandomNumber(0,1) == 1) ? 0 : 2;
+        }
+
 
         Explorer explorer = ExplorerFactory.constructExplorer(Explorer.COMMUNICATIVE_EXPLORER);
         explorer.setBlock(new Block(column, line));
@@ -81,24 +91,39 @@ public class GameBuilder {
      * @param environment The environment on which to generate the treasures.
      * @return Map The environment with the generated treasures. 
      */
-//    public static Environment generateRandomTreasures(int nbTreasures, Environment environment) {
-//        int x, y;
-//        for(int i = 0; i < nbTreasures; i++) {
-//            do {
-//                x = Utility.getRandomNumber(1, GameConfig.WINDOW_WIDTH-3) * GameConfig.BLOCK_SIZE;
-//                y = Utility.getRandomNumber(GameConfig.WINDOW_WIDTH/2, GameConfig.WINDOW_HEIGHT-3) * GameConfig.BLOCK_SIZE;
-//
-//            }while(Utility.isElementNBlockNearElement(environment, new Block(x, y), 3));
-//
-//            Position position = new Position(x, y);
-//            try {
+    public static Environment generateRandomTreasures(int nbTreasures, Environment environment) {
+        int line, column;
+        for(int i = 0; i < nbTreasures; i++) {
+            do {
+                line = Utility.getRandomNumber(1, Environment.NUM_ZONES * Environment.NUM_ZONES);
+                column = Utility.getRandomNumber(1, Environment.NUM_ZONES * Environment.NUM_ZONES);
+
+            } while(Utility.isElementNBlockNearElement(environment, new Block(line, column), 2));
+
+            Block position = new Block(line, column);
+            environment.addElement(new Treasure(position));
 //                environment.addElement((Treasure)StaticElementFactory.createStaticElement(
 //                        StaticElementFactory.TREASURE, position));
-//            } catch (ValueException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return environment;
-//    }
+        }
+        return environment;
+    }
+
+    public static ArrayList<EnvironmentElement> initObstacles(int nbSlowingDownObstacles, Environment map){
+        ArrayList<EnvironmentElement> obstacles = new ArrayList<EnvironmentElement>();
+        int column, line, i, randInstance;
+        Block obstaclePosition;
+        for(i = 0; i<nbSlowingDownObstacles; i++) {
+            do {
+                column = Utility.getRandomNumber(1, map.getColumnCount());
+                line = Utility.getRandomNumber(1, map.getLineCount());
+                obstaclePosition = new Block(column, line);
+            }while(Utility.getEnvironmentElementFromPosition(map, obstaclePosition) != null);
+
+            obstacles.add(new Obstacle(new Block(line, column)));
+        }
+
+        return obstacles;
+
+    }
 
 }

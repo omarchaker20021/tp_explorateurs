@@ -157,4 +157,21 @@ public class Utility {
         return (block.getLine() / 4) * 4 + (block.getColumn() / 4);
     }
 
+    public static EnvironmentElement getEnvironmentElementFromPosition(Environment environment, Block block){
+        for(EnvironmentElement mapElement : environment.getElements()){
+
+            int columnElement = mapElement.getColumn();
+            int lineElement = mapElement.getLine();
+
+
+            if(block.getColumn() == columnElement && block.getLine() == lineElement) {
+                return mapElement;
+            }
+
+        }
+
+        return null;
+
+    }
+
 }

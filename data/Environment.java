@@ -78,6 +78,11 @@ public class Environment {
         elements.add(element);
     }
 
+
+    public void addElements(ArrayList<EnvironmentElement> elements) {
+        this.elements.addAll(elements);
+    }
+
     public ArrayList<Obstacle> getObstacles(){
         ArrayList<Obstacle> obstacles = null;
         for (EnvironmentElement element : elements){
