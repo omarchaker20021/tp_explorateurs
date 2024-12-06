@@ -1,6 +1,6 @@
 package data;
 
-public class Animal extends Object{
+public class Animal extends Objet {
     private int health;
 
     public Animal(Block block, int health){

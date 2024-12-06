@@ -79,12 +79,6 @@ public class Utility {
             if(searchedBlock.equals(environmentElement.getBlock())) {
                 return environmentElement;
             }
-            else if(xSearchedBlock < columnElement + GameConfig.BLOCK_SIZE
-                    && xSearchedBlock > columnElement
-                    && ySearchedBlock < lineElement + GameConfig.BLOCK_SIZE
-                    && ySearchedBlock > lineElement) {
-                return environmentElement;
-            }
 
         }
 
@@ -106,5 +100,16 @@ public class Utility {
         }
         return false;
 
+    }
+
+    /**
+     * Simulates the unit time (for an iteration) defined for the simulation.
+     */
+    public static void unitTime() {
+        try {
+            Thread.sleep(GameConfig.GAME_SPEED);
+        } catch (InterruptedException e) {
+            System.err.println(e.getMessage());
+        }
     }
 }

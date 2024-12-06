@@ -26,8 +26,34 @@ public class Block {
         return column;
     }
 
+    public void setLine(int line) {
+        this.line = line;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
+
+    public void set(int column, int line){
+        this.line = line;
+        this.column = column;
+    }
+
     public boolean isObstacle() {
         return isObstacle;
+    }
+
+    public boolean equals(Object obj) {
+        if(obj == this) {
+            return true;
+        }
+        else if( !(obj instanceof Block) ) {
+            return false;
+        }
+
+        Block objPos = (Block) obj;
+
+        return objPos.getLine() == this.line && objPos.getColumn() == this.column;
     }
 
     @Override

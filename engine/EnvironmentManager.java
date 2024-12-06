@@ -1,8 +1,7 @@
 package engine;
 
 import data.Block;
-import data.Environment;
-import data.Explorer;
+import data.*;
 import data.Obstacle;
 
 import java.util.ArrayList;
@@ -11,17 +10,23 @@ import java.util.Random;
 
 public class EnvironmentManager {
     private Environment environment;
+
+
+    private ArrayList<ExplorerManager> explorerManagers;
+
     private List<Explorer> explorers;
     private Random random;
 
     public EnvironmentManager(Environment environment) {
         this.environment = environment;
         this.explorers = new ArrayList<>();
+        this.explorerManagers = GameBuilder.buildInitMobile(environment);
         this.random = new Random();
     }
 
     public void addExplorer(Explorer explorer) {
         explorers.add(explorer);
+        explorerManagers.add(new ExplorerManager(explorer, environment));
     }
     private boolean isValidMove(int line, int column) {
         Block block = environment.getBlock(line, column);
@@ -58,7 +63,13 @@ public class EnvironmentManager {
     }
 
 
+
+
     public List<Explorer> getExplorers() {
         return explorers;
+    }
+
+    public ArrayList<ExplorerManager> getExplorerManagers() {
+        return explorerManagers;
     }
 }

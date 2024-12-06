@@ -22,7 +22,7 @@ public class EnvironmentElement {
 
 	public void setBlock(Block newBlock) {
 		// TODO Auto-generated method stub
-		
+		this.block = newBlock;
 	}
 
 
