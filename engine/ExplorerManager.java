@@ -33,22 +33,29 @@ public class ExplorerManager extends Thread {
 
     @Override
     public void run() {
+        List<Block> treasurePositions = new ArrayList<>(); // Positions des trésors trouvés
+
         while (running) {
             Utility.unitTime();
 
-            randomMove();
-            scan();
-            moveToTreasure();
+            if (explorer.getExplorerType() == 1) { // Communicatif
+                randomMove();
+                treasurePositions = scanForTreasures(); // Récupère uniquement les positions des trésors
+            } else if (explorer.getExplorerType() == 2) { // Cognitif
+                randomMove();
+                if (!treasurePositions.isEmpty()) {
+                    inform(treasurePositions); // Transmet les positions au cognitif
+                }
+            }
 
             // Vérifiez si l'explorateur est mort après le mouvement
             if (explorer.getHealth() <= 0) {
                 System.out.println("L'explorateur est mort.");
-//                running = false; // Arrête le thread si l'explorateur est mort
-                // Reset de la position de l'explorateur
-                explorer.setBlock(GameBuilder.generateExplorerPosition());
+                explorer.setBlock(GameBuilder.generateExplorerPosition()); // Reset de la position
             }
         }
     }
+
 
 
     public boolean isRunning() {
@@ -185,7 +192,6 @@ public class ExplorerManager extends Thread {
         }
     }
 
-
     private boolean isValidMove(int line, int column) {
 //        Block block = environment.getBlock(line, column);
 //        return block != null && !(environment.isOnBorder(block));
@@ -200,54 +206,36 @@ public class ExplorerManager extends Thread {
         this.explorer = explorer;
     }
 
-//    public void exploreZone(int zoneId) {
-//        if (visitedZones.contains(zoneId)) {
-//            System.out.println("Zone " + zoneId + " déjà visitée. Exploration ignorée.");
-//            return; // La zone a déjà été explorée
-//        }
-//
-//        visitedZones.add(zoneId); // Marque la zone comme visitée
-//
-//        // Récupérer les blocs de la zone grâce à Utility
-//        List<Block> zoneBlocks = Utility.getBlocksFromZone(zoneId, environment);
-//
-//        List<EnvironmentElement> zoneElements = new ArrayList<>();
-//        List<Block> treasurePositions = new ArrayList<>();
-//
-//        for (Block block : zoneBlocks) {
-//            EnvironmentElement element = Utility.getElementFromBlock(environment, block);
-//            if (element != null) {
-//                zoneElements.add(element);
-//                // Si c'est un trésor, enregistrer sa position
-//                if (element instanceof Treasure) {
-//                    treasurePositions.add(block);
-//                }
-//            }
-//        }
-//
-//        // Rapporter les résultats
-//        System.out.println("Exploration de la zone " + zoneId + " terminée.");
-//        System.out.println("Éléments trouvés : " + zoneElements);
-//        System.out.println("Trésors détectés aux positions : " + treasurePositions);
-//    }
-
     private List<EnvironmentElement> scannedElements = new ArrayList<>();
+    private List<Block> scanForTreasures() {
+        Block currentBlock = explorer.getBlock(); // Bloc actuel de l'explorateur
+        scannedElements.clear(); // Réinitialiser la liste des éléments scannés
+        List<Block> treasurePositions = new ArrayList<>(); // Liste pour les positions des trésors
 
-    private void scan() {
-        Block currentBlock = explorer.getBlock();
-        scannedElements.clear();
-        EnvironmentElement element = Utility.getElementFromBlock(environment, currentBlock);
+        // Obtenir la zone actuelle
+        int currentZone = Utility.getZoneByBlock(currentBlock);
+        Block[][] blocksInZone = Utility.getBlocksByZone(environment, currentZone);
 
-        if (element != null) {
-            scannedElements.add(element);
-            informCognitiveAgent();
+        // Parcourir les blocs de la zone pour trouver les trésors
+        for (int i = 0; i < blocksInZone.length; i++) {
+            for (int j = 0; j < blocksInZone[i].length; j++) {
+                Block block = blocksInZone[i][j];
+                EnvironmentElement element = Utility.getElementFromBlock(environment, block);
+                if (element != null && element instanceof Treasure) { // Vérifie si l'élément est un trésor
+                    treasurePositions.add(block); // Ajoute la position du trésor
+                    System.out.println("Communicatif : Trésor trouvé à " + block);
+                }
+            }
         }
+
+        return treasurePositions; // Retourne les positions des trésors
     }
 
-    private void informCognitiveAgent() {
-        System.out.println("Objet : " + scannedElements);
-        scannedElements.clear();
+    private List<EnvironmentElement> receivedElements= new ArrayList<>();
+    private void inform(List<Block> treasurePositions) {
+        System.out.println("Cognitif a reçu les positions des trésors : " + treasurePositions);
     }
+
     //    public int getTrainId() {
 //        return train.getId();
 //    }
