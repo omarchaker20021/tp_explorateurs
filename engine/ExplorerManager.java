@@ -41,7 +41,9 @@ public class ExplorerManager extends Thread {
             // Vérifiez si l'explorateur est mort après le mouvement
             if (explorer.getHealth() <= 0) {
                 System.out.println("L'explorateur est mort.");
-                running = false; // Arrête le thread si l'explorateur est mort
+//                running = false; // Arrête le thread si l'explorateur est mort
+                // Reset de la position de l'explorateur
+                explorer.setBlock(GameBuilder.generateExplorerPosition());
             }
         }
     }
@@ -60,8 +62,6 @@ public class ExplorerManager extends Thread {
     }
 
     public void randomMove() {
-        List<Explorer> deadExplorers = new ArrayList<>();
-
         Block currentBlock = explorer.getBlock();
         int newLine = currentBlock.getLine();
         int newColumn = currentBlock.getColumn();
@@ -82,53 +82,62 @@ public class ExplorerManager extends Thread {
             Block newBlock = environment.getBlock(newLine, newColumn);
 
             // Vérifier si le nouveau bloc est un obstacle
-            if (!Utility.isObstacleByBlock(newBlock, environment)) {
-                updatePosition(newColumn, newLine);
-                System.out.println("Nouvelle position : (" + newLine + ", " + newColumn + ")");
-
-                // Vérifier si un trésor est présent sur ce bloc
-                EnvironmentElement element = Utility.getElementFromBlock(environment, newBlock);
-                if (element instanceof Treasure) {
-                    Treasure treasure = (Treasure) element;
-                    if (!treasure.isCollected()) {
-                        treasure.collect(); // Collecte le trésor
-                        this.environment.getElements().remove(treasure);
-                    } else {
-                        System.out.println("Le trésor sur ce bloc a déjà été collecté.");
-                    }
-                }
-            } else {
+            if (Utility.isObstacleByBlock(newBlock, environment)) {
                 System.out.println("Obstacle détecté à la position (" + newLine + ", " + newColumn + "). Mouvement annulé.");
+                return; // Arrête le mouvement
             }
 
-            // Combat avec un animal
-            if (Utility.isAnimalByBlock(newBlock, environment)) {
-                System.out.println("A rencontré un animal");
-                EnvironmentElement element = Utility.getElementFromBlock(environment, newBlock);
-                if (element instanceof Animal animal) {
-                    environmentManager.fight(explorer, animal);
-                }
-            }
-
-            // Si l'explorateur est mort après le combat
-            if (explorer.getHealth() <= 0) {
-                System.out.println("L'explorateur est mort.");
-                running = false; // Arrêter le thread
-            }
-
+            // Si pas d'obstacle, mettre à jour la position
             updatePosition(newColumn, newLine);
             System.out.println("Nouvelle position : (" + newLine + ", " + newColumn + ")");
+
+            // Vérifier si un trésor est présent sur ce bloc
+            EnvironmentElement element = Utility.getElementFromBlock(environment, newBlock);
+            if (element instanceof Treasure treasure) {
+                if (!treasure.isCollected()) {
+                    treasure.collect(); // Collecte le trésor
+                    this.environment.getElements().remove(treasure);
+                    System.out.println("Trésor collecté !");
+                } else {
+                    System.out.println("Le trésor sur ce bloc a déjà été collecté.");
+                }
+            }
+
+            // Vérifier si un animal est présent sur ce bloc
+            if (Utility.isAnimalByBlock(newBlock, environment)) {
+                System.out.println("Un animal est détecté sur la position (" + newLine + ", " + newColumn + "). Combat engagé.");
+
+                EnvironmentElement elementAnimal = Utility.getElementFromBlock(environment, newBlock);
+                if (elementAnimal instanceof Animal animal) {
+                    // Appeler la méthode fight
+                    environmentManager.fight(explorer, animal);
+
+                    // Vérifiez si l'explorateur est mort après le combat
+                    if (explorer.getHealth() <= 0) {
+                        System.out.println("L'explorateur est mort après le combat.");
+//                        running = false; // Arrête le thread
+                        return; // Stoppe l'exécution de la méthode
+                    }
+
+                    // Vérifiez si l'animal est mort
+                    if (animal.getHealth() <= 0) {
+                        System.out.println("L'animal est mort après le combat.");
+                    }
+                }
+            }
         } else {
             System.out.println("Déplacement non valide pour l'explorateur.");
         }
     }
 
 
+
+
     private boolean isValidMove(int line, int column) {
-//        Block block = environment.getBlock(line, column);
-//        return block != null && !(environment.isOnBorder(block));
-        return !(Utility.isBlockOutOfMap(column, line));
-    }
+//      Block block = environment.getBlock(line, column);
+//      return block != null && !(environment.isOnBorder(block));
+      return !(Utility.isBlockOutOfMap(column, line));
+  }
 
     public Explorer getExplorer() {
         return explorer;

@@ -19,19 +19,21 @@ public class Explorer extends EnvironmentElement {
     private int strength;
 
     // Constante
-    public static final int EXPLORER_TYPE = 1;
+    private int type;
 
     // Constructeur
-    public Explorer(int health, int strength) {
+    public Explorer(int health, int strength, int type) {
         super();
         this.health = health;
         this.strength = strength;
+        this.type = type;
     }
 
-    public Explorer(Block block, int health, int strength) {
+    public Explorer(Block block, int health, int strength, int type) {
         super(block);
         this.health = health;
         this.strength = strength;
+        this.type = type;
     }
 
     // Getters et Setters
@@ -51,8 +53,8 @@ public class Explorer extends EnvironmentElement {
         this.strength = strength;
     }
 
-    public static int getExplorerType() {
-        return EXPLORER_TYPE;
+    public int getExplorerType() {
+        return this.type;
     }
 
 

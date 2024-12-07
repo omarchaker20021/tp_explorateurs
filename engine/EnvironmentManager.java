@@ -3,6 +3,7 @@ package engine;
 import data.Block;
 import data.*;
 import data.Obstacle;
+import config.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +32,9 @@ public class EnvironmentManager {
         explorerManagers.add(new ExplorerManager(explorer, environment, environmentManager));
     }
     private boolean isValidMove(int line, int column) {
-        Block block = environment.getBlock(line, column);
-        return block != null && !block.isObstacle();
+//        Block block = environment.getBlock(line, column);
+//        return block != null && !block.isObstacle();
+    	return Utility.isBlockOutOfMap(line, column);
     }
 
 
@@ -71,33 +73,51 @@ public class EnvironmentManager {
 
     public void fight(Explorer explorer, Animal animal) {
         Random random = new Random();
-        boolean explorerWins = random.nextBoolean(); // Génère aléatoirement true ou false
+        int currentRound = 1;
 
-        if (explorerWins) {
-            // L'explorateur gagne
-            System.out.println("L'explorateur gagne le combat !");
-            int damageToAnimal = random.nextInt(30) + 20; // Dégâts entre 20 et 50
-            animal.setHealth(animal.getHealth() - damageToAnimal);
-            System.out.println("L'animal perd " + damageToAnimal + " points de santé.");
-        } else {
-            // L'animal gagne
-            System.out.println("L'animal gagne le combat !");
-            int damageToExplorer = random.nextInt(30) + 20; // Dégâts entre 20 et 50
-            explorer.setHealth(explorer.getHealth() - damageToExplorer);
-            System.out.println("L'explorateur perd " + damageToExplorer + " points de santé.");
+        System.out.println("Début du combat entre l'explorateur et l'animal !");
+
+        while (currentRound <= GameConfig.NbRounds) { // Utilisation de la constante
+            System.out.println("Tour " + currentRound + "/" + GameConfig.NbRounds);
+
+            boolean explorerAttacksFirst = random.nextBoolean(); // Détermine qui attaque en premier ce tour
+
+            if (explorerAttacksFirst) {
+                // L'explorateur attaque
+                int damageToAnimal = random.nextInt(30) + 20; // Dégâts entre 20 et 50
+                animal.setHealth(animal.getHealth() - damageToAnimal);
+                System.out.println("L'explorateur attaque et inflige " + damageToAnimal + " points de dégâts à l'animal.");
+            } else {
+                // L'animal attaque
+                int damageToExplorer = random.nextInt(30) + 20; // Dégâts entre 20 et 50
+                explorer.setHealth(explorer.getHealth() - damageToExplorer);
+                System.out.println("L'animal attaque et inflige " + damageToExplorer + " points de dégâts à l'explorateur.");
+            }
+
+            // Vérifiez si l'explorateur est mort
+            if (explorer.getHealth() <= 0) {
+                System.out.println("L'explorateur est mort.");
+                explorers.remove(explorer); // Supprimer de la liste des explorateurs
+                break; // Arrête le combat
+            }
+
+            // Vérifiez si l'animal est mort
+            if (animal.getHealth() <= 0) {
+                System.out.println("L'animal est mort.");
+                this.environment.getElements().remove(animal); // Retirer l'animal de l'environnement
+                break; // Arrête le combat
+            }
+
+            currentRound++;
         }
 
-        // Vérifiez si l'explorateur est mort
-        if (explorer.getHealth() <= 0) {
-            System.out.println("L'explorateur est mort.");
-            explorers.remove(explorer); // Supprimer de la liste des explorateurs
+        if (currentRound > GameConfig.NbRounds) {
+            System.out.println("Le combat se termine après " + GameConfig.NbRounds + " tours.");
         }
 
-        // Vérifiez si l'animal est mort
-        if (animal.getHealth() <= 0) {
-            System.out.println("L'animal est mort.");
-            //animal.getBlock().setAnimal(null); // Supprimer l'animal du bloc
-            this.environment.getElements().remove(animal);
+        // Vérification finale après tous les tours
+        if (explorer.getHealth() > 0 && animal.getHealth() > 0) {
+            System.out.println("Le combat s'est terminé sans vainqueur !");
         }
     }
 

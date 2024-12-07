@@ -31,34 +31,25 @@ public class GameBuilder {
 
         environment.addElements(initObstacles(10, environment));
 
-        ArrayList<EnvironmentElement> animals = initAnimals(10, environment);
+        Treasure treasure = new Treasure(new Block(1,5));
+        environment.addElement(treasure);
 
-        environment.addElements(initAnimals(10, environment));
+
+        Animal animal = new Animal(new Block(1,3), 100);
+        environment.addElement(animal);
+        
+        Animal animal2 = new Animal(new Block(2,3), 100);
+        environment.addElement(animal2);
 
 
-//        Treasure treasure = new Treasure(new Block(1,5));
-//        environment.addElement(treasure);
-//
-//
-//        Animal animal = new Animal(new Block(1,3), 100);
-//        environment.addElement(animal);
-//
-//
-//        Obstacle obstacle = new Obstacle(new Block(6,3));
-//        environment.addElement(obstacle);
+        Obstacle obstacle = new Obstacle(new Block(6,3));
+        environment.addElement(obstacle);
 
 
         return environment;
 
     }
-
-    public static ArrayList<ExplorerManager> buildInitMobile(Environment environment, EnvironmentManager environmentManager) {
-
-//        intializeExplorer(environment, manager);
-
-        ArrayList<ExplorerManager> managers = new ArrayList<>();
-
-
+    public static Block generateExplorerPosition(){
         // Générer une ligne aléatoire (0 à 3)
         int line = Utility.getRandomNumber(0, 4);
 
@@ -71,14 +62,24 @@ public class GameBuilder {
             // Lignes impaires (1 et 3)
             column = (Utility.getRandomNumber(0,1) == 1) ? 0 : 2;
         }
+        return new Block(line, column);
+    }
 
+    public static ArrayList<ExplorerManager> buildInitMobile(Environment environment, EnvironmentManager environmentManager) {
+
+//        intializeExplorer(environment, manager);
+
+        ArrayList<ExplorerManager> managers = new ArrayList<>();
 
         Explorer explorer = ExplorerFactory.constructExplorer(Explorer.COMMUNICATIVE_EXPLORER);
-        explorer.setBlock(new Block(column, line));
+        explorer.setBlock(generateExplorerPosition());
+        Explorer explorer1 = ExplorerFactory.constructExplorer(Explorer.COMMUNICATIVE_EXPLORER);
+        explorer1.setBlock(generateExplorerPosition());
 
         ExplorerManager manager = new ExplorerManager(explorer, environment, environmentManager);
-
         managers.add(manager);
+        ExplorerManager manager1 = new ExplorerManager(explorer1, environment, environmentManager);
+        managers.add(manager1);
 
 
         return managers;
@@ -100,8 +101,8 @@ public class GameBuilder {
         int line, column;
         for(int i = 0; i < nbTreasures; i++) {
             do {
-                line = Utility.getRandomNumber(4, Environment.NUM_ZONES * Environment.NUM_ZONES);
-                column = Utility.getRandomNumber(4, Environment.NUM_ZONES * Environment.NUM_ZONES);
+                line = Utility.getRandomNumber(1, Environment.NUM_ZONES * Environment.NUM_ZONES);
+                column = Utility.getRandomNumber(1, Environment.NUM_ZONES * Environment.NUM_ZONES);
 
             } while(Utility.isElementNBlockNearElement(environment, new Block(line, column), 2));
 
@@ -119,8 +120,8 @@ public class GameBuilder {
         Block obstaclePosition;
         for(i = 0; i<nbSlowingDownObstacles; i++) {
             do {
-                column = Utility.getRandomNumber(4, map.getColumnCount());
-                line = Utility.getRandomNumber(4, map.getLineCount());
+                column = Utility.getRandomNumber(1, map.getColumnCount());
+                line = Utility.getRandomNumber(1, map.getLineCount());
                 obstaclePosition = new Block(column, line);
             }while(Utility.getEnvironmentElementFromPosition(map, obstaclePosition) != null);
 
@@ -128,24 +129,6 @@ public class GameBuilder {
         }
 
         return obstacles;
-
-    }
-
-    public static ArrayList<EnvironmentElement> initAnimals(int nbSlowingDownAnimals, Environment map){
-        ArrayList<EnvironmentElement> animals = new ArrayList<EnvironmentElement>();
-        int column, line, i;
-        Block animalPosition;
-        for(i = 0; i<nbSlowingDownAnimals; i++) {
-            do {
-                column = Utility.getRandomNumber(4, map.getColumnCount());
-                line = Utility.getRandomNumber(4, map.getLineCount());
-                animalPosition = new Block(column, line);
-            }while(!(Utility.getEnvironmentElementFromPosition(map, animalPosition) instanceof Treasure));
-
-            animals.add(new Animal(new Block(line, column)));
-        }
-
-        return animals;
 
     }
 

@@ -14,4 +14,5 @@ public class GameConfig {
     public static final int MAX_BOMB_COUNT = 3;
 
     public static final int BOMB_EXPLOSION_DELAY = 3;
+    public static final int NbRounds = 5;
 }
