@@ -79,12 +79,17 @@ public class GameBuilder {
         Explorer explorer1 = ExplorerFactory.constructExplorer(Explorer.COGNITIVE_EXPLORER);
         explorer1.setBlock(generateExplorerPosition());
 
+        Explorer explorer2 = ExplorerFactory.constructExplorer(Explorer.REACTIVE_EXPLORER);
+        explorer2.setBlock(generateExplorerPosition());
+
         ExplorerManager manager = new ExplorerManager(explorer, environment, environmentManager);
         ExplorerManager manager1 = new ExplorerManager(explorer1, environment, environmentManager);
+        ExplorerManager manager2 = new ExplorerManager(explorer2, environment, environmentManager);
 
 
         managers.add(manager);
         managers.add(manager1);
+        managers.add(manager2);
 
 
         return managers;

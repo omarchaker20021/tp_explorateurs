@@ -140,7 +140,24 @@ public class PaintStrategy {
 
         ArrayList<Integer> explorerPos = Utility.getGraphicPosition(explorer);
 
-        g.drawImage(Utility.readImage("sprites/boy2.png"),
+        String explorerName = "";
+
+        switch (explorer.getExplorerType()){
+            case Explorer.COGNITIVE_EXPLORER :
+                explorerName = "cognitive";
+                break;
+
+            case Explorer.COMMUNICATIVE_EXPLORER :
+                explorerName = "communicatif";
+                break;
+
+            case Explorer.REACTIVE_EXPLORER :
+                explorerName = "reactif";
+                break;
+
+        }
+
+        g.drawImage(Utility.readImage("sprites/" + explorerName + ".png"),
                 explorerPos.get(0), explorerPos.get(1), GameConfig.BLOCK_SIZE,
                 GameConfig.BLOCK_SIZE, null);
 

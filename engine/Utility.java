@@ -175,7 +175,7 @@ public class Utility {
     }
 
     public static boolean isBlockOutOfMap(int line, int column){
-        return line == -1 || column == -1;
+        return line == -1 || column == -1 || line == 16 || column == 16;
     }
 
     public static Block[][] getBlocksByZone(Environment environment, int zone) {
@@ -208,6 +208,8 @@ public class Utility {
 
         return blocksInZone;
     }
+
+
 
 
 
