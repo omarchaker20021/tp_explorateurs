@@ -11,6 +11,7 @@ public class ExplorerManager extends Thread {
     private Environment environment;
 
     private EnvironmentManager environmentManager;
+    private Treasure treasure;
 
     /**
      * The trains has arrived at the terminus.
@@ -37,6 +38,7 @@ public class ExplorerManager extends Thread {
 
             randomMove();
             scan();
+            moveToTreasure();
 
             // Vérifiez si l'explorateur est mort après le mouvement
             if (explorer.getHealth() <= 0) {
@@ -60,6 +62,59 @@ public class ExplorerManager extends Thread {
     public void updatePosition(int column, int line) {
         explorer.getBlock().set(column, line);
     }
+    public void moveToTreasure() {
+        if (treasure == null) {
+            System.out.println("Aucun trésor assigné.");
+            return;
+        }
+
+        // Récupérer les coordonnées du trésor
+        int treasureLine = treasure.getBlock().getLine();
+        int treasureColumn = treasure.getBlock().getColumn();
+
+        // Coordonnées actuelles de l'explorateur
+        int currentLine = explorer.getBlock().getLine();
+        int currentColumn = explorer.getBlock().getColumn();
+
+        // Boucle de déplacement vers le trésor
+        if (currentLine != treasureLine || currentColumn != treasureColumn) {
+            System.out.println("Explorateur à (" + currentLine + ", " + currentColumn + ")");
+            System.out.println("Trésor à (" + treasureLine + ", " + treasureColumn + ")");
+
+            // Calcul du prochain mouvement
+            if (currentLine < treasureLine) {
+                currentLine++; // Avancer vers le bas
+            } else if (currentLine > treasureLine) {
+                currentLine--; // Avancer vers le haut
+            } else if (currentColumn < treasureColumn) {
+                currentColumn++; // Avancer vers la droite
+            } else if (currentColumn > treasureColumn) {
+                currentColumn--; // Avancer vers la gauche
+            }
+
+            // Vérification des obstacles avant de déplacer
+            Block nextBlock = environment.getBlock(currentLine, currentColumn);
+            if (Utility.isObstacleByBlock(nextBlock, environment)) {
+                System.out.println("Obstacle détecté à la position (" + currentLine + ", " + currentColumn + "). Mouvement annulé.");
+            }
+            else {
+            	// Mettre à jour la position de l'explorateur
+                updatePosition(currentColumn, currentLine);
+            }
+
+            
+        }
+
+        // Vérifier si l'explorateur atteint le trésor
+        if (currentLine == treasureLine && currentColumn == treasureColumn) {
+            System.out.println("Explorateur a atteint le trésor !");
+            treasure.collect(); // Collecter le trésor
+            environment.getElements().remove(treasure); // Supprimer le trésor de l'environnement
+        } else {
+            System.out.println("L'explorateur n'a pas pu atteindre le trésor.");
+        }
+    }
+
 
     public void randomMove() {
         Block currentBlock = explorer.getBlock();
