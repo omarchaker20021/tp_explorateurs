@@ -127,7 +127,7 @@ public class GameBuilder {
             do {
                 column = Utility.getRandomNumber(4, map.getColumnCount());
                 line = Utility.getRandomNumber(4, map.getLineCount());
-                obstaclePosition = new Block(column, line);
+                obstaclePosition = new Block(line, column);
             }while(Utility.getEnvironmentElementFromPosition(map, obstaclePosition) != null);
 
             obstacles.add(new Obstacle(new Block(line, column)));
@@ -145,8 +145,9 @@ public class GameBuilder {
             do {
                 column = Utility.getRandomNumber(4, map.getColumnCount());
                 line = Utility.getRandomNumber(4, map.getLineCount());
-                animalPosition = new Block(column, line);
-            }while(!(Utility.getEnvironmentElementFromPosition(map, animalPosition) instanceof Treasure));
+                animalPosition = new Block(line, column);
+            }while(!(Utility.getEnvironmentElementFromPosition(map, animalPosition) instanceof Treasure)
+            		&& Utility.getEnvironmentElementFromPosition(map, animalPosition) != null);
 
             animals.add(new Animal(new Block(line, column)));
         }
