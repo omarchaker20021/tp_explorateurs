@@ -177,4 +177,38 @@ public class Utility {
     public static boolean isBlockOutOfMap(int line, int column){
         return line == -1 || column == -1;
     }
+
+    public static Block[][] getBlocksByZone(Environment environment, int zone) {
+
+        // Obtenir la grille globale des blocs
+        Block[][] allBlocks = environment.getBlocks(); // Méthode hypothétique
+
+        // Dimensions globales
+        int rows = allBlocks.length;
+        int cols = allBlocks[0].length;
+
+        // Calculer les coordonnées de départ de la zone
+        int startRow = (zone / Environment.NUM_BLOCKS_PER_ZONE) * Environment.NUM_BLOCKS_PER_ZONE;
+        int startCol = (zone % Environment.NUM_BLOCKS_PER_ZONE) * Environment.NUM_BLOCKS_PER_ZONE;
+
+        // Vérifier les limites (au cas où)
+        if (startRow >= rows || startCol >= cols) {
+            throw new IllegalArgumentException("Zone invalide ou hors limites !");
+        }
+
+        // Initialiser un tableau pour contenir les blocs de la zone
+        Block[][] blocksInZone = new Block[Environment.NUM_BLOCKS_PER_ZONE][Environment.NUM_BLOCKS_PER_ZONE];
+
+        // Parcourir les blocs de la zone
+        for (int i = 0; i < Environment.NUM_BLOCKS_PER_ZONE; i++) {
+            for (int j = 0; j < Environment.NUM_BLOCKS_PER_ZONE; j++) {
+                blocksInZone[i][j] = allBlocks[startRow + i][startCol + j];
+            }
+        }
+
+        return blocksInZone;
+    }
+
+
+
 }
