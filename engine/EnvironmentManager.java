@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.lang.model.element.Element;
 
 public class EnvironmentManager {
     private Environment environment;

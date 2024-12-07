@@ -125,8 +125,9 @@ public class ExplorerManager extends Thread {
 
 
     private boolean isValidMove(int line, int column) {
-        Block block = environment.getBlock(line, column);
-        return block != null && !(environment.isOnBorder(block));
+//        Block block = environment.getBlock(line, column);
+//        return block != null && !(environment.isOnBorder(block));
+        return !(Utility.isBlockOutOfMap(column, line));
     }
 
     public Explorer getExplorer() {

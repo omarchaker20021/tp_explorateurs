@@ -174,4 +174,7 @@ public class Utility {
 
     }
 
+    public static boolean isBlockOutOfMap(int line, int column){
+        return line == -1 || column == -1;
+    }
 }
