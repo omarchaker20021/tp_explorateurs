@@ -20,6 +20,7 @@ public class Animal extends Objet {
         this.health = health;
     }
 
+
 //    public int getStrength() {
 //        return 0;
 //    }

@@ -35,8 +35,8 @@ public class ExplorerManager extends Thread {
         while (running) {
             Utility.unitTime();
 
-            // Déplacer l'explorateur
             randomMove();
+            scan();
 
             // Vérifiez si l'explorateur est mort après le mouvement
             if (explorer.getHealth() <= 0) {
@@ -131,13 +131,11 @@ public class ExplorerManager extends Thread {
     }
 
 
-
-
     private boolean isValidMove(int line, int column) {
-//      Block block = environment.getBlock(line, column);
-//      return block != null && !(environment.isOnBorder(block));
-      return !(Utility.isBlockOutOfMap(column, line));
-  }
+//        Block block = environment.getBlock(line, column);
+//        return block != null && !(environment.isOnBorder(block));
+        return !(Utility.isBlockOutOfMap(column, line));
+    }
 
     public Explorer getExplorer() {
         return explorer;
@@ -147,6 +145,54 @@ public class ExplorerManager extends Thread {
         this.explorer = explorer;
     }
 
+//    public void exploreZone(int zoneId) {
+//        if (visitedZones.contains(zoneId)) {
+//            System.out.println("Zone " + zoneId + " déjà visitée. Exploration ignorée.");
+//            return; // La zone a déjà été explorée
+//        }
+//
+//        visitedZones.add(zoneId); // Marque la zone comme visitée
+//
+//        // Récupérer les blocs de la zone grâce à Utility
+//        List<Block> zoneBlocks = Utility.getBlocksFromZone(zoneId, environment);
+//
+//        List<EnvironmentElement> zoneElements = new ArrayList<>();
+//        List<Block> treasurePositions = new ArrayList<>();
+//
+//        for (Block block : zoneBlocks) {
+//            EnvironmentElement element = Utility.getElementFromBlock(environment, block);
+//            if (element != null) {
+//                zoneElements.add(element);
+//                // Si c'est un trésor, enregistrer sa position
+//                if (element instanceof Treasure) {
+//                    treasurePositions.add(block);
+//                }
+//            }
+//        }
+//
+//        // Rapporter les résultats
+//        System.out.println("Exploration de la zone " + zoneId + " terminée.");
+//        System.out.println("Éléments trouvés : " + zoneElements);
+//        System.out.println("Trésors détectés aux positions : " + treasurePositions);
+//    }
+
+    private List<EnvironmentElement> scannedElements = new ArrayList<>();
+
+    private void scan() {
+        Block currentBlock = explorer.getBlock();
+        scannedElements.clear();
+        EnvironmentElement element = Utility.getElementFromBlock(environment, currentBlock);
+
+        if (element != null) {
+            scannedElements.add(element);
+            informCognitiveAgent();
+        }
+    }
+
+    private void informCognitiveAgent() {
+        System.out.println("Objet : " + scannedElements);
+        scannedElements.clear();
+    }
     //    public int getTrainId() {
 //        return train.getId();
 //    }

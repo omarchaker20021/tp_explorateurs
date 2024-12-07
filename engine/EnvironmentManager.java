@@ -13,7 +13,6 @@ import java.util.Random;
 public class EnvironmentManager {
     private Environment environment;
 
-
     private ArrayList<ExplorerManager> explorerManagers;
 
     private List<Explorer> explorers;
@@ -120,9 +119,6 @@ public class EnvironmentManager {
             System.out.println("Le combat s'est terminé sans vainqueur !");
         }
     }
-
-
-
 
 
     public List<Explorer> getExplorers() {
