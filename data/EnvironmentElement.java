@@ -12,7 +12,7 @@ public class EnvironmentElement {
     }
 
 
-    public Block getBlock() {
+    public synchronized Block getBlock() {
         return block;
     }
 

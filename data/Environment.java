@@ -2,6 +2,9 @@ package data;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Environment {
 
@@ -10,6 +13,9 @@ public class Environment {
     public static final int NUM_ZONES = 4;
 
     private ArrayList<EnvironmentElement> elements;
+
+
+    private ConcurrentHashMap<Block, EnvironmentElement> elementsByBlocks = new ConcurrentHashMap<>();
     private Block[][] blocks;
 
     private int lineCount;
@@ -103,6 +109,15 @@ public class Environment {
         return obstacles;
     }
 
+    public void addElementsByBlock(HashMap<Block, EnvironmentElement> elementsByBlocks){
+        this.elementsByBlocks.putAll(elementsByBlocks);
+    }
 
+    public void addElementsByBlock(Block key, EnvironmentElement value){
+        this.elementsByBlocks.put(key, value);
+    }
 
+    public ConcurrentHashMap<Block, EnvironmentElement> getElementsByBlocks() {
+        return elementsByBlocks;
+    }
 }

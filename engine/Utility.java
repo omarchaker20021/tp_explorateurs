@@ -62,15 +62,16 @@ public class Utility {
      * @return a {@link EnvironmentElement} since the position in parameter.
      * */
 
-    public static EnvironmentElement getElementFromBlock(Environment environment, Block searchedBlock) {
+    public static synchronized EnvironmentElement getElementFromBlock(Environment environment, Block searchedBlock) {
+
+//        ArrayList<EnvironmentElement> elements;
+
+        // Synchroniser uniquement l'accès aux éléments si nécessaire
+//        synchronized (environment) {
+//            elements = new ArrayList<>(environment.getElements()); // Copie pour éviter les modifications concurrentes
+//        }
 
         for(EnvironmentElement environmentElement : environment.getElements()){
-            int xSearchedBlock = searchedBlock.getColumn();
-            int ySearchedBlock = searchedBlock.getLine();
-
-            int columnElement = environmentElement.getBlock().getColumn();
-            int lineElement = environmentElement.getBlock().getLine();
-
 
             if(searchedBlock.equals(environmentElement.getBlock())) {
                 return environmentElement;
@@ -80,6 +81,19 @@ public class Utility {
 
         return null;
     }
+
+
+//    public static synchronized EnvironmentElement getElementFromBlock(Environment environment, Block searchedBlock) {
+//
+////        ArrayList<EnvironmentElement> elements;
+////
+//////         Synchroniser uniquement l'accès aux éléments si nécessaire
+////        synchronized (environment) {
+////            elements = new ArrayList<>(environment.getElements()); // Copie pour éviter les modifications concurrentes
+////        }
+//
+//        return environment.getElementsByBlocks().get(searchedBlock);
+//    }
 
     public static ArrayList<Integer> getGraphicPosition(EnvironmentElement element){
         ArrayList<Integer> position = new ArrayList<Integer>(2);
@@ -121,7 +135,7 @@ public class Utility {
         }
     }
 
-    public static boolean isElementNBlockNearElement(Environment map, Block elementPosition, int nbBlocks) {
+    public synchronized static boolean isElementNBlockNearElement(Environment map, Block elementPosition, int nbBlocks) {
         int line = elementPosition.getLine();
         int column = elementPosition.getColumn();
         if(line + nbBlocks < map.getColumnCount()
@@ -153,7 +167,7 @@ public class Utility {
         return (block.getLine() / 4) * 4 + (block.getColumn() / 4);
     }
 
-    public static EnvironmentElement getEnvironmentElementFromPosition(Environment environment, Block block){
+    public static synchronized EnvironmentElement getEnvironmentElementFromPosition(Environment environment, Block block){
         for(EnvironmentElement mapElement : environment.getElements()){
 
             int columnElement = mapElement.getColumn();
@@ -205,7 +219,7 @@ public class Utility {
         return blocksInZone;
     }
 
-    public static boolean isLineTreasure(int line, ArrayList<EnvironmentElement> elements){
+    public synchronized static boolean isLineTreasure(int line, ArrayList<EnvironmentElement> elements){
         for (EnvironmentElement element : elements){
             if (element instanceof Treasure){
 
@@ -220,7 +234,7 @@ public class Utility {
 
     }
 
-    public static boolean isColumnTreasure(int column, ArrayList<EnvironmentElement> elements){
+    public synchronized static boolean isColumnTreasure(int column, ArrayList<EnvironmentElement> elements){
         for (EnvironmentElement element : elements){
             if (element instanceof Treasure){
 

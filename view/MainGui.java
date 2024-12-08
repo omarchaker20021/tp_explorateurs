@@ -5,6 +5,7 @@ import data.Environment;
 import engine.EnvironmentManager;
 import engine.ExplorerManager;
 import engine.GameBuilder;
+import engine.Utility;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -32,7 +33,11 @@ public class MainGui extends JFrame implements Runnable {
 
     private final static Dimension preferredSize = new Dimension(GameConfig.WINDOW_WIDTH, GameConfig.WINDOW_HEIGHT);
 
+    public final static Dimension statsPanelPreferredSize = new Dimension(GameConfig.WINDOW_WIDTH/2, GameConfig.WINDOW_HEIGHT);
+
     private EnvironmentManager manager;
+
+    private StatsPanel statsPanel;
 
     private GameDisplay dashboard;
 
@@ -46,21 +51,17 @@ public class MainGui extends JFrame implements Runnable {
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
-//        KeyControls keyControls = new KeyControls();
-//        JTextField textField = new JTextField();
-//        textField.addKeyListener(keyControls);
-//        contentPane.add(textField, BorderLayout.SOUTH);
         Environment environment = GameBuilder.buildMap();
         manager = new EnvironmentManager(environment);
 
-//        manager = GameBuilder.buildInitMobile(map);
         dashboard = new GameDisplay(environment, manager);
-
-//        MouseControls mouseControls = new MouseControls();
-//        dashboard.addMouseListener(mouseControls);
+        statsPanel = new StatsPanel(manager);
 
         dashboard.setPreferredSize(preferredSize);
         contentPane.add(dashboard, BorderLayout.CENTER);
+
+        statsPanel.setPreferredSize(statsPanelPreferredSize);
+        contentPane.add(statsPanel, BorderLayout.WEST);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
@@ -71,7 +72,8 @@ public class MainGui extends JFrame implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        while (manager.getNbRounds() < GameConfig.NB_GAME_ROUNDS) {
+
 
 //            System.out.println("Test");
             for (ExplorerManager explorerManager : manager.getExplorerManagers()){
@@ -86,8 +88,17 @@ public class MainGui extends JFrame implements Runnable {
             }
 
 
+            manager.increaseNbRounds();
 
+
+            Utility.unitTime();
+
+            if (manager.getNbRounds() % 10 == 0){
+                Utility.unitTime();
+            }
+            statsPanel.updateStats();
             dashboard.repaint();
+            statsPanel.repaint();
 //            manager.nextRound();
 //            dashboard.repaint();
 

@@ -1,5 +1,9 @@
 package engine;
 
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import data.Block;
 import data.*;
 import data.Obstacle;
@@ -20,6 +24,11 @@ public class EnvironmentManager {
     private Random random;
 
     private ArrayList<Treasure> affectedTreasures = new ArrayList<>();
+
+    private AtomicInteger nbRounds = new AtomicInteger(0);
+
+    private AtomicInteger nbCollectedTreasures = new AtomicInteger(0);
+    private AtomicInteger nbCombats = new AtomicInteger(0);
 
     public EnvironmentManager(Environment environment) {
         this.environment = environment;
@@ -57,7 +66,7 @@ public class EnvironmentManager {
 
             // Générer une direction aléatoire (0: haut, 1: bas, 2: gauche, 3: droite)
             int direction = random.nextInt(4);
-            System.out.println("Explorateur à (" + newLine + ", " + newColumn + "), direction : " + direction);
+//            System.out.println("Explorateur à (" + newLine + ", " + newColumn + "), direction : " + direction);
 
             switch (direction) {
                 case 0: newLine--; break; // Haut
@@ -70,10 +79,11 @@ public class EnvironmentManager {
             if (isValidMove(newLine, newColumn)) {
                 Block newBlock = environment.getBlock(newLine, newColumn);
                 explorer.setBlock(newBlock);
-                System.out.println("Nouvelle position : (" + newLine + ", " + newColumn + ")");
-            } else {
-                System.out.println("Déplacement non valide pour l'explorateur.");
+//                System.out.println("Nouvelle position : (" + newLine + ", " + newColumn + ")");
             }
+//            else {
+//                System.out.println("Déplacement non valide pour l'explorateur.");
+//            }
         }
 
         explorers.removeAll(deadExplorers);
@@ -113,6 +123,7 @@ public class EnvironmentManager {
             if (animal.getHealth() <= 0) {
                 System.out.println("L'animal est mort.");
                 this.environment.getElements().remove(animal); // Retirer l'animal de l'environnement
+                environment.getElementsByBlocks().remove(animal.getBlock());
                 break; // Arrête le combat
             }
 
@@ -136,5 +147,28 @@ public class EnvironmentManager {
 
     public ArrayList<ExplorerManager> getExplorerManagers() {
         return explorerManagers;
+    }
+
+    public void increaseNbRounds() {
+        this.nbRounds.incrementAndGet();
+    }
+
+    public int getNbRounds() {
+        return nbRounds.get();
+    }
+
+    public int getNbCollectedTreasures() {
+        return nbCollectedTreasures.get();
+    }
+
+    public void increaseNbCollectedTreasures(){
+        nbCollectedTreasures.incrementAndGet();
+    }
+
+    public int getNbCombats() {
+        return nbCombats.get();
+    }
+    public void increaseNbCombats(){
+        nbCombats.incrementAndGet();
     }
 }

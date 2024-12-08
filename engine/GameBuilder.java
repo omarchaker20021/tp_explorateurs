@@ -121,7 +121,9 @@ public class GameBuilder {
                     && ((column / 4 == 0) && (line / 4 == 0)));
 
             Block position = new Block(line, column);
-            environment.addElement(new Treasure(position));
+            Treasure treasure = new Treasure(position);
+            environment.addElementsByBlock(position, treasure);
+            environment.addElement(treasure);
 //                environment.addElement((Treasure)StaticElementFactory.createStaticElement(
 //                        StaticElementFactory.TREASURE, position));
         }
@@ -142,7 +144,9 @@ public class GameBuilder {
                     || Utility.isLineTreasure(line, map.getElements())
                     || Utility.isColumnTreasure(column, map.getElements()));
 
-            obstacles.add(new Obstacle(new Block(line, column)));
+            Obstacle obstacle =new Obstacle(new Block(line, column));
+            obstacles.add(obstacle);
+            map.addElementsByBlock(obstacle.getBlock(), obstacle);
         }
 
         return obstacles;
@@ -162,7 +166,10 @@ public class GameBuilder {
             		&& Utility.getEnvironmentElementFromPosition(map, animalPosition) != null
                     || ((column / 4 == 0) && (line / 4 == 0)));
 
-            animals.add(new Animal(new Block(line, column)));
+            Animal animal =new Animal(new Block(line, column));
+            animals.add(animal);
+            map.addElementsByBlock(animal.getBlock(), animal);
+
         }
 
         return animals;

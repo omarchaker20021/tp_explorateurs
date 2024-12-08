@@ -47,10 +47,15 @@ public class ExplorerManager extends Thread {
         int type = explorer.getExplorerType();
         while (running) {
             Utility.unitTime();
-
+            Utility.unitTime();
+//            if (environmentManager.getNbRounds() % 10 == 0){
+//                Utility.unitTime();
+//            }
 
 
             if (type == Explorer.COMMUNICATIVE_EXPLORER) { // Communicatif
+
+//                Utility.unitTime();
                 randomMove();
                 Treasure treasure = scanForTreasure(); // Récupère uniquement les positions des trésors
                 if (treasure != null) {
@@ -180,7 +185,7 @@ public class ExplorerManager extends Thread {
         int newLine = currentBlock.getLine();
         int newColumn = currentBlock.getColumn();
 
-        System.out.println("Explorateur à (" + newLine + ", " + newColumn + "), direction : " + direction);
+//        System.out.println("Explorateur à (" + newLine + ", " + newColumn + "), direction : " + direction);
 
         // Appliquer le mouvement selon la direction
         switch (direction) {
@@ -215,9 +220,10 @@ public class ExplorerManager extends Thread {
                 System.out.println("Un animal est détecté sur la position (" + newLine + ", " + newColumn + "). Combat engagé.");
 
                 EnvironmentElement elementAnimal = Utility.getElementFromBlock(environment, newBlock);
-                if (elementAnimal instanceof Animal animal && explorer.getExplorerType() != Explorer.COMMUNICATIVE_EXPLORER) {
+                if (elementAnimal instanceof Animal animal) {
                     // Appeler la méthode fight
                     environmentManager.fight(explorer, animal);
+                    environmentManager.increaseNbCombats();
 
                     // Vérifiez si l'explorateur est mort après le combat
                     if (explorer.getHealth() <= 0) {
@@ -235,17 +241,22 @@ public class ExplorerManager extends Thread {
                     return; // Arrête le mouvement
                 }
             }
+//            else if (((Utility.getElementFromBlock(environment, newBlock) instanceof Treasure))){
+////                System.out.println("Obstacle détecté à la position (" + newLine + ", " + newColumn + "). Mouvement annulé.");
+//                return;
+//            }
+//            System.out.println("Nouvelle position : (" + newLine + ", " + newColumn + ")");
 
-            // Si pas d'obstacle, mettre à jour la position
             updatePosition(newColumn, newLine);
-            System.out.println("Nouvelle position : (" + newLine + ", " + newColumn + ")");
 
             // Vérifier si un trésor est présent sur ce bloc
             EnvironmentElement element = Utility.getElementFromBlock(environment, newBlock);
             if (element instanceof Treasure treasure && explorer.getExplorerType() != Explorer.COMMUNICATIVE_EXPLORER) {
                 if (!treasure.isCollected()) {
                     treasure.collect(); // Collecte le trésor
+                    environmentManager.increaseNbCollectedTreasures();
                     this.environment.getElements().remove(treasure);
+                    environment.getElementsByBlocks().remove(treasure.getBlock());
                     System.out.println("Trésor collecté !");
                 } else {
                     System.out.println("Le trésor sur ce bloc a déjà été collecté.");
@@ -293,8 +304,8 @@ public class ExplorerManager extends Thread {
 
         // Boucle de déplacement vers le trésor
         if (currentLine != treasureLine || currentColumn != treasureColumn) {
-            System.out.println("Explorateur à (" + currentLine + ", " + currentColumn + ")");
-            System.out.println("Trésor à (" + treasureLine + ", " + treasureColumn + ")");
+//            System.out.println("Explorateur à (" + currentLine + ", " + currentColumn + ")");
+//            System.out.println("Trésor à (" + treasureLine + ", " + treasureColumn + ")");
 
             // Calcul du prochain mouvement
             if (currentLine < treasureLine) {
@@ -325,10 +336,13 @@ public class ExplorerManager extends Thread {
         if (currentLine == treasureLine && currentColumn == treasureColumn) {
             System.out.println("Explorateur a atteint le trésor !");
             treasure.collect(); // Collecter le trésor
+            environmentManager.increaseNbCollectedTreasures();
             environment.getElements().remove(treasure); // Supprimer le trésor de l'environnement
-        } else {
-            System.out.println("L'explorateur n'a pas pu atteindre le trésor.");
+            environment.getElementsByBlocks().remove(treasure.getBlock());
         }
+//        else {
+//            System.out.println("L'explorateur n'a pas pu atteindre le trésor.");
+//        }
     }
 
 
@@ -339,7 +353,7 @@ public class ExplorerManager extends Thread {
 
         // Générer une direction aléatoire (0: haut, 1: bas, 2: gauche, 3: droite)
         int direction = Utility.getRandomNumber(0, 3);
-        System.out.println("Explorateur à (" + newLine + ", " + newColumn + "), direction : " + direction);
+//        System.out.println("Explorateur à (" + newLine + ", " + newColumn + "), direction : " + direction);
 
         moveInDirection(direction);
     }

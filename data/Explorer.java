@@ -60,7 +60,7 @@ public class Explorer extends EnvironmentElement {
 
     public void setBlock(Block newBlock) {
         super.setBlock(newBlock); // Mets à jour la position dans la classe parente
-        System.out.println("Explorer déplacé vers : (" + newBlock.getLine() + ", " + newBlock.getColumn() + ")");
+//        System.out.println("Explorer déplacé vers : (" + newBlock.getLine() + ", " + newBlock.getColumn() + ")");
     }
 
 

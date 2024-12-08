@@ -9,18 +9,19 @@ public class GameConfig {
     public static final int LINE_COUNT = WINDOW_HEIGHT / BLOCK_SIZE;
     public static final int COLUMN_COUNT = WINDOW_WIDTH / BLOCK_SIZE;
 
-    public static final int GAME_SPEED = 1000;
+    public static final int GAME_SPEED = 500;
 
-    public static final int MAX_BOMB_COUNT = 3;
-
-    public static final int BOMB_EXPLOSION_DELAY = 3;
+//    public static final int MAX_BOMB_COUNT = 3;
+//
+//    public static final int BOMB_EXPLOSION_DELAY = 3;
     public static final int NbRounds = 5;
 
     // Constantes pour gérer le nombre d'explorateurs en tout genre
-    public static final int NB_COMMUNICANTS = 5;
+    public static final int NB_COMMUNICANTS = 3;
 
     public static final int NB_REACTIFS = 5;
 
     public static final int NB_COGNITIFS = 5;
+    public static final int NB_GAME_ROUNDS = 300;
 
 }
