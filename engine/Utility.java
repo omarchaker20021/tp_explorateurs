@@ -1,11 +1,7 @@
 package engine;
 
 import config.GameConfig;
-import data.Block;
-import data.Environment;
-import data.EnvironmentElement;
-import data.Obstacle;
-import data.Animal;
+import data.*;
 
 import java.awt.*;
 
@@ -209,7 +205,35 @@ public class Utility {
         return blocksInZone;
     }
 
+    public static boolean isLineTreasure(int line, ArrayList<EnvironmentElement> elements){
+        for (EnvironmentElement element : elements){
+            if (element instanceof Treasure){
 
+                Treasure treasure = (Treasure) element;
+
+                if (treasure.getBlock().getLine() == line)
+                    return true;
+            }
+
+        }
+        return false;
+
+    }
+
+    public static boolean isColumnTreasure(int column, ArrayList<EnvironmentElement> elements){
+        for (EnvironmentElement element : elements){
+            if (element instanceof Treasure){
+
+                Treasure treasure = (Treasure) element;
+
+                if (treasure.getBlock().getColumn() == column)
+                    return true;
+            }
+
+        }
+        return false;
+
+    }
 
 
 

@@ -22,4 +22,29 @@ public class ExplorerFactory {
         return explorer;
 
     }
+
+    public static Explorer setExplorer(Explorer explorer){
+        int explorer_type = explorer.getExplorerType();
+        switch (explorer_type){
+            case Explorer.REACTIVE_EXPLORER :
+                explorer.setHealth(Explorer.REACTIVE_HEALTH);
+                explorer.setStrength(Explorer.REACTIVE_STRENGTH);
+                explorer.setBlock(GameBuilder.generateExplorerPosition());
+                break;
+
+            case Explorer.COGNITIVE_EXPLORER :
+                explorer.setHealth(Explorer.COGNITIVE_HEALTH);
+                explorer.setStrength(Explorer.COGNITIVE_STRENGTH);
+                explorer.setBlock(GameBuilder.generateExplorerPosition());
+                break;
+            case Explorer.COMMUNICATIVE_EXPLORER:
+                explorer.setHealth(Explorer.COMMUNICATIVE_HEALTH);
+                explorer.setStrength(Explorer.COMMUNICATIVE_STRENGTH);
+                explorer.setBlock(GameBuilder.generateExplorerPosition());
+                break;
+
+        }
+        return explorer;
+
+    }
 }

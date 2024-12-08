@@ -8,6 +8,7 @@ import config.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class EnvironmentManager {
@@ -17,7 +18,8 @@ public class EnvironmentManager {
 
     private List<Explorer> explorers;
     private Random random;
-    private EnvironmentManager environmentManager;
+
+    private ArrayList<Treasure> affectedTreasures = new ArrayList<>();
 
     public EnvironmentManager(Environment environment) {
         this.environment = environment;
@@ -28,7 +30,7 @@ public class EnvironmentManager {
 
     public void addExplorer(Explorer explorer) {
         explorers.add(explorer);
-        explorerManagers.add(new ExplorerManager(explorer, environment, environmentManager));
+        explorerManagers.add(new ExplorerManager(explorer, environment, this));
     }
     private boolean isValidMove(int line, int column) {
 //        Block block = environment.getBlock(line, column);
@@ -36,6 +38,13 @@ public class EnvironmentManager {
     	return Utility.isBlockOutOfMap(line, column);
     }
 
+    public ArrayList<Treasure> getAffectedTreasures() {
+        return affectedTreasures;
+    }
+
+    public void addAffectedTreasure(Treasure treasure) {
+        affectedTreasures.add(treasure);
+    }
 
     public void moveExplorers() {
 
