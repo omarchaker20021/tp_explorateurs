@@ -46,28 +46,6 @@ public class GameDisplay extends JPanel {
 
         }
 
-
-//
-//        for (Enemy enemy : manager.getEnemies()) {
-//            paintStrategy.paint(enemy, g);
-//        }
-//
-//        for (Missile missile : manager.getMissiles()) {
-//            paintStrategy.paint(missile, g);
-//        }
-//
-//        Bomb bomb = manager.getBomb();
-//        if (bomb != null) {
-//            paintStrategy.paint(bomb, g);
-//            List<Block> bombZone = manager.getBombZone();
-//            paintStrategy.paint(bombZone, g);
-//        }
     }
-
-//    public Block getBombPosition(int x, int y) {
-//        int line = y / GameConfiguration.BLOCK_SIZE;
-//        int column = x / GameConfiguration.BLOCK_SIZE;
-//        return map.getBlock(line, column);
-//    }
 
 }

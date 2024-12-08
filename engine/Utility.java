@@ -11,12 +11,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-/**
- * This class contains static methods for different utilities
- *
- * @author Omar CHAKER
- * @version 1.0
- * */
 
 public class Utility {
 
@@ -82,18 +76,6 @@ public class Utility {
         return null;
     }
 
-
-//    public static synchronized EnvironmentElement getElementFromBlock(Environment environment, Block searchedBlock) {
-//
-////        ArrayList<EnvironmentElement> elements;
-////
-//////         Synchroniser uniquement l'accès aux éléments si nécessaire
-////        synchronized (environment) {
-////            elements = new ArrayList<>(environment.getElements()); // Copie pour éviter les modifications concurrentes
-////        }
-//
-//        return environment.getElementsByBlocks().get(searchedBlock);
-//    }
 
     public static ArrayList<Integer> getGraphicPosition(EnvironmentElement element){
         ArrayList<Integer> position = new ArrayList<Integer>(2);

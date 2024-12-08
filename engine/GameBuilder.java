@@ -5,54 +5,21 @@ import data.*;
 
 import java.util.ArrayList;
 
-/**
- * Copyright SEDAMOP - Software Engineering
- *
- * @author tianxiao.liu@cyu.fr
- *
- */
-
 public class GameBuilder {
 
     public static Environment buildMap() {
         return initMapElements();
     }
 
-    /**
-     * @brief This function generates and initializes the elements of the game environment.
-     * @return Map The environment with its elements.
-     */
-
     public static Environment initMapElements(){
         Environment environment = new Environment(GameConfig.LINE_COUNT, GameConfig.COLUMN_COUNT);
 
         environment = generateRandomTreasures(10, environment);
-//        environment.addElements(initForestsByTreasures(environment.getElements()));
-//        ArrayList<EnvironmentElement> obstacles = initObstacles(10, environment);
 
         environment.addElements(initObstacles(10, environment));
 
-//        ArrayList<EnvironmentElement> animals = initAnimals(20, environment);
 
         environment.addElements(initAnimals(20, environment));
-
-
-//        Treasure treasure = new Treasure(new Block(1,5));
-//        environment.addElement(treasure);
-//
-//        Treasure treasure2 = new Treasure(new Block(5,1));
-//        environment.addElement(treasure2);
-//
-//        Treasure treasure3 = new Treasure(new Block(5,5));
-//        environment.addElement(treasure3);
-//
-//
-//        Animal animal = new Animal(new Block(1,3), 100);
-//        environment.addElement(animal);
-//
-//
-//        Obstacle obstacle = new Obstacle(new Block(6,3));
-//        environment.addElement(obstacle);
 
 
         return environment;
@@ -104,12 +71,6 @@ public class GameBuilder {
         return managers;
     }
 
-    /**
-     * @brief This function generates random treasures on the environment.
-     * @param nbTreasures The number of treasures to generate.
-     * @param environment The environment on which to generate the treasures.
-     * @return Map The environment with the generated treasures. 
-     */
     public static Environment generateRandomTreasures(int nbTreasures, Environment environment) {
         int line, column;
         for(int i = 0; i < nbTreasures; i++) {

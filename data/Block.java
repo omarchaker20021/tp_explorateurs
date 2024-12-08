@@ -11,7 +11,7 @@ public class Block {
     public Block(int line, int column) {
         this.line = line;
         this.column = column;
-        this.isObstacle = false; // Par défaut, ce n'est pas un obstacle
+        this.isObstacle = false; 
     }
 
     public Block(int line, int column, boolean isObstacle) {

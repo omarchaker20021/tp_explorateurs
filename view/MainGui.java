@@ -72,13 +72,14 @@ public class MainGui extends JFrame implements Runnable {
 
     @Override
     public void run() {
-        while (manager.getNbRounds() < GameConfig.NB_GAME_ROUNDS) {
+        final int MAX_ROUNDS = 200;
 
+        while (manager.getNbRounds() < MAX_ROUNDS) {
 
-//            System.out.println("Test");
-            for (ExplorerManager explorerManager : manager.getExplorerManagers()){
-                if (!explorerManager.isAlive())
+            for (ExplorerManager explorerManager : manager.getExplorerManagers()) {
+                if (!explorerManager.isAlive()) {
                     explorerManager.start();
+                }
             }
 
             try {
@@ -87,86 +88,25 @@ public class MainGui extends JFrame implements Runnable {
                 System.out.println(e.getMessage());
             }
 
-
+            // Augmente le nombre de tours
             manager.increaseNbRounds();
 
-
+            // Simulation d'une unité de temps
             Utility.unitTime();
 
-            if (manager.getNbRounds() % 10 == 0){
+            if (manager.getNbRounds() % 10 == 0) {
                 Utility.unitTime();
             }
+
+            // Mise à jour de l'interface
             statsPanel.updateStats();
             dashboard.repaint();
             statsPanel.repaint();
-//            manager.nextRound();
-//            dashboard.repaint();
-
         }
+
+        // Fin de la boucle
+        System.out.println("Le jeu est terminé ");
     }
 
-//    private class KeyControls implements KeyListener {
-//
-//        @Override
-//        public void keyPressed(KeyEvent event) {
-//            char keyChar = event.getKeyChar();
-//            switch (keyChar) {
-//
-//                case 'q':
-//                    manager.moveLeftAirCraft();
-//                    break;
-//                case 'd':
-//                    manager.moveRightAirCraft();
-//                    break;
-//                case 'm':
-//                    manager.generateMissile();
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-//
-//        @Override
-//        public void keyTyped(KeyEvent e) {
-//
-//        }
-//
-//        @Override
-//        public void keyReleased(KeyEvent e) {
-//
-//        }
-//    }
-//
-//    private class MouseControls implements MouseListener {
-//
-//        @Override
-//        public void mouseClicked(MouseEvent e) {
-//            int x = e.getX();
-//            int y = e.getY();
-//
-//            Block bombPosition = dashboard.getBombPosition(x, y);
-//            manager.putBomb(bombPosition);
-//        }
-//
-//        @Override
-//        public void mousePressed(MouseEvent e) {
-//
-//        }
-//
-//        @Override
-//        public void mouseReleased(MouseEvent e) {
-//
-//        }
-//
-//        @Override
-//        public void mouseEntered(MouseEvent e) {
-//
-//        }
-//
-//        @Override
-//        public void mouseExited(MouseEvent e) {
-//
-//        }
-//    }
 
 }

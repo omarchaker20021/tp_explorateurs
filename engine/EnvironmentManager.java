@@ -37,56 +37,12 @@ public class EnvironmentManager {
         this.random = new Random();
     }
 
-    public void addExplorer(Explorer explorer) {
-        explorers.add(explorer);
-        explorerManagers.add(new ExplorerManager(explorer, environment, this));
-    }
-    private boolean isValidMove(int line, int column) {
-//        Block block = environment.getBlock(line, column);
-//        return block != null && !block.isObstacle();
-    	return Utility.isBlockOutOfMap(line, column);
-    }
-
     public ArrayList<Treasure> getAffectedTreasures() {
         return affectedTreasures;
     }
 
     public void addAffectedTreasure(Treasure treasure) {
         affectedTreasures.add(treasure);
-    }
-
-    public void moveExplorers() {
-
-        List<Explorer> deadExplorers = new ArrayList<>();
-
-        for (Explorer explorer : explorers) {
-            Block currentBlock = explorer.getBlock();
-            int newLine = currentBlock.getLine();
-            int newColumn = currentBlock.getColumn();
-
-            // Générer une direction aléatoire (0: haut, 1: bas, 2: gauche, 3: droite)
-            int direction = random.nextInt(4);
-//            System.out.println("Explorateur à (" + newLine + ", " + newColumn + "), direction : " + direction);
-
-            switch (direction) {
-                case 0: newLine--; break; // Haut
-                case 1: newLine++; break; // Bas
-                case 2: newColumn--; break; // Gauche
-                case 3: newColumn++; break; // Droite
-            }
-
-            // Vérifie que le déplacement est valide
-            if (isValidMove(newLine, newColumn)) {
-                Block newBlock = environment.getBlock(newLine, newColumn);
-                explorer.setBlock(newBlock);
-//                System.out.println("Nouvelle position : (" + newLine + ", " + newColumn + ")");
-            }
-//            else {
-//                System.out.println("Déplacement non valide pour l'explorateur.");
-//            }
-        }
-
-        explorers.removeAll(deadExplorers);
     }
 
     public void fight(Explorer explorer, Animal animal) {
@@ -138,11 +94,6 @@ public class EnvironmentManager {
         if (explorer.getHealth() > 0 && animal.getHealth() > 0) {
             System.out.println("Le combat s'est terminé sans vainqueur !");
         }
-    }
-
-
-    public List<Explorer> getExplorers() {
-        return explorers;
     }
 
     public ArrayList<ExplorerManager> getExplorerManagers() {

@@ -59,19 +59,17 @@ public class Explorer extends EnvironmentElement {
 
 
     public void setBlock(Block newBlock) {
-        super.setBlock(newBlock); // Mets à jour la position dans la classe parente
-//        System.out.println("Explorer déplacé vers : (" + newBlock.getLine() + ", " + newBlock.getColumn() + ")");
+        super.setBlock(newBlock);
     }
 
 
 	public int getType() {
-		// TODO Auto-generated method stub
-		return 0;
+		return type;
 	}
 	@Override
 	public String toString() {
 	    return "Explorer{" +
-	           "type=" + getType() + 
+	           "type=" + getType() +
 	           ", position=(" + (getBlock() != null ? getBlock().getLine() + ", " + getBlock().getColumn() : "N/A") + ")" +
 	           ", health=" + health +
 	           ", strength=" + strength +

@@ -19,9 +19,4 @@ public class Animal extends Objet {
     public void setHealth(int health){
         this.health = health;
     }
-
-
-//    public int getStrength() {
-//        return 0;
-//    }
 }

@@ -63,10 +63,4 @@ public class StatsPanel extends JPanel {
         nbCombats.setText("Nombre de combats disputés :" + manager.getNbCombats());
     }
 
-//    public Block getBombPosition(int x, int y) {
-//        int line = y / GameConfiguration.BLOCK_SIZE;
-//        int column = x / GameConfiguration.BLOCK_SIZE;
-//        return map.getBlock(line, column);
-//    }
-
 }

@@ -10,14 +10,6 @@ import config.GameConfig;
 import data.*;
 import engine.Utility;
 
-/**
- * This class represents the paint stategy.
- *
- * @author Omar CHAKER
- * @author Xuming MA
- * @version 2.0
- * */
-
 
 public class PaintStrategy {
     /**
@@ -162,22 +154,6 @@ public class PaintStrategy {
                 GameConfig.BLOCK_SIZE, null);
 
     }
-//    /**
-//     *
-//     *@brief This method draws the forest on the canvas.
-//     *@param g The graphics context for drawing.
-//     *@param forest The forest to draw.
-//     */
-//
-//    private static void paintForest(Graphics g, Forest forest) {
-//
-//        for(Tree tree : forest.getTrees()) {
-//            Position treePos = tree.getPosition();
-//            g.drawImage(Utility.readImage("src/images/sprites/tree.png"),
-//                    treePos.getX(), treePos.getY(), Block.BLOCK_WIDTH,
-//                    Block.BLOCK_WIDTH, null);
-//        }
-//    }
 
 
 

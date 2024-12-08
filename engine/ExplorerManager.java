@@ -28,8 +28,6 @@ public class ExplorerManager extends Thread {
      */
     private boolean running = true;
 
-    private ArrayList<Integer> visitedZones = new ArrayList<Integer>();
-
     public ExplorerManager(Explorer explorer, Environment environment, EnvironmentManager environmentManager) {
         this.explorer = explorer;
         this.environment = environment;
@@ -42,7 +40,6 @@ public class ExplorerManager extends Thread {
 
     @Override
     public void run() {
-//        Treasure treasure = null; // Positions des trésors trouvés
 
         int type = explorer.getExplorerType();
         while (running) {
@@ -54,7 +51,6 @@ public class ExplorerManager extends Thread {
 
 
             if (type == Explorer.COMMUNICATIVE_EXPLORER) { // Communicatif
-
 //                Utility.unitTime();
                 randomMove();
                 Treasure treasure = scanForTreasure(); // Récupère uniquement les positions des trésors
@@ -67,24 +63,14 @@ public class ExplorerManager extends Thread {
                             && !environmentManager.getAffectedTreasures().contains(treasure)){
                             explorerManager.setTreasure(treasure);
                             environmentManager.addAffectedTreasure(treasure);
-                            // constructPathToTreasure(trea);
                             break;
                         }
                     }
                 }
             } else if (type == Explorer.COGNITIVE_EXPLORER) { // Cognitif
                 if (treasure != null) {
-//                    if (pathToTreasure == null){
-//                        constructPathToTreasure();
-//                        pathStep = pathToTreasure.iterator();
-//                    }
                     inform(treasure); // Transmet les positions au cognitif
                     moveToTreasure();
-//                    pathStep.next();
-//                    nextMoveToTreasure();
-                }
-                else {
-                    randomMove();
                 }
             } else if (type == Explorer.REACTIVE_EXPLORER) {
                 randomMove();
@@ -99,110 +85,29 @@ public class ExplorerManager extends Thread {
     }
 
 
-    public void constructPathToTreasure() {
-
-        int startRow = explorer.getLine();
-        int startCol = explorer.getColumn();
-        int treasureRow = treasure.getLine();
-        int treasureCol = treasure.getColumn();
-
-        pathToTreasure = new ArrayList<Integer>();
-        int row = startRow, col = startCol;
-
-        // Directions: [0: up, 1: down, 2: left, 3: right]
-        int[] dRow = {-1, 1, 0, 0};
-        int[] dCol = {0, 0, -1, 1};
-
-        // Continue until we reach the treasure
-        while (row != treasureRow || col != treasureCol) {
-            int nextRow = row, nextCol = col;
-
-            // Prioritize moving towards the treasure
-            if (row < treasureRow) { // Move down
-                nextRow = row + 1;
-                nextCol = col;
-            } else if (row > treasureRow) { // Move up
-                nextRow = row - 1;
-                nextCol = col;
-            } else if (col < treasureCol) { // Move right
-                nextRow = row;
-                nextCol = col + 1;
-            } else if (col > treasureCol) { // Move left
-                nextRow = row;
-                nextCol = col - 1;
-            }
-
-            // Check if the next move is valid
-            if (isValidMove(nextRow, nextCol)) {
-                // Determine the direction
-                if (nextRow < row) {
-                    pathToTreasure.add(0); // Up
-                } else if (nextRow > row) {
-                    pathToTreasure.add(1); // Down
-                } else if (nextCol < col) {
-                    pathToTreasure.add(2); // Left
-                } else if (nextCol > col) {
-                    pathToTreasure.add(3); // Right
-                }
-
-                // Update position
-                row = nextRow;
-                col = nextCol;
-            } else {
-                // If blocked, try a different valid direction
-                boolean moved = false;
-                for (int i = 0; i < 4; i++) {
-                    int newRow = row + dRow[i];
-                    int newCol = col + dCol[i];
-                    if (isValidMove(newRow, newCol)) {
-                        pathToTreasure.add(i);
-                        row = newRow;
-                        col = newCol;
-                        moved = true;
-                        break;
-                    }
-                }
-                if (!moved) {
-                    throw new RuntimeException("No valid path to the treasure!");
-                }
-            }
-        }
-    }
-
-    public void nextMoveToTreasure(){
-        if (pathStep.hasNext()){
-            int direction = pathStep.next();
-            moveInDirection(direction);
-        }
-//        else {
-//            // Réinitialiser treasure à null
-//            treasure = null;
-//        }
-    }
-
     public void moveInDirection(int direction) {
         Block currentBlock = explorer.getBlock();
         int newLine = currentBlock.getLine();
         int newColumn = currentBlock.getColumn();
 
-//        System.out.println("Explorateur à (" + newLine + ", " + newColumn + "), direction : " + direction);
-
         // Appliquer le mouvement selon la direction
         switch (direction) {
             case 0:
-                if(newLine / 4 != 0
-                        && newColumn / 4 != 0){
+                if (newLine / 4 != 0 && newColumn / 4 != 0) {
                     newLine--;
-                    break;
+                    break; // Haut
                 }
-            case 1: newLine++; break; // Bas
+            case 1:
+                newLine++;
+                break; // Bas
             case 2:
-                if(newLine / 4 != 0
-                        && newColumn / 4 != 0){
+                if (newLine / 4 != 0 && newColumn / 4 != 0) {
                     newColumn--;
-                    break;
-                } // Gauche
-            case 3: newColumn++; break; // Droite
+                    break; // Gauche
+                }
+            case 3:
+                newColumn++;
+                break; // Droite
         }
 
         // Vérifie que le déplacement est valide
@@ -217,8 +122,13 @@ public class ExplorerManager extends Thread {
 
             // Vérifier si un animal est présent sur ce bloc
             else if (Utility.isAnimalByBlock(newBlock, environment)) {
-                System.out.println("Un animal est détecté sur la position (" + newLine + ", " + newColumn + "). Combat engagé.");
+                // Les explorateurs communicatifs évitent les combats
+                if (explorer.getExplorerType() == Explorer.COMMUNICATIVE_EXPLORER) {
+                    //System.out.println("Explorateur communicatif : évite le combat à (" + newLine + ", " + newColumn + ").");
+                    return;
+                }
 
+                System.out.println("Un animal est détecté sur la position (" + newLine + ", " + newColumn + "). Combat engagé.");
                 EnvironmentElement elementAnimal = Utility.getElementFromBlock(environment, newBlock);
                 if (elementAnimal instanceof Animal animal) {
                     // Appeler la méthode fight
@@ -236,20 +146,23 @@ public class ExplorerManager extends Thread {
                     if (animal.getHealth() <= 0) {
                         System.out.println("L'animal est mort après le combat.");
                     }
-                } else {
-                    System.out.println("Obstacle détecté à la position (" + newLine + ", " + newColumn + "). Mouvement annulé.");
-                    return; // Arrête le mouvement
                 }
             }
-//            else if (((Utility.getElementFromBlock(environment, newBlock) instanceof Treasure))){
-////                System.out.println("Obstacle détecté à la position (" + newLine + ", " + newColumn + "). Mouvement annulé.");
-//                return;
-//            }
-//            System.out.println("Nouvelle position : (" + newLine + ", " + newColumn + ")");
-
-            updatePosition(newColumn, newLine);
 
             // Vérifier si un trésor est présent sur ce bloc
+            else if (Utility.getElementFromBlock(environment, newBlock) instanceof Treasure) {
+                // Les explorateurs communicatifs n'entrent pas dans une case contenant un trésor
+                if (explorer.getExplorerType() == Explorer.COMMUNICATIVE_EXPLORER) {
+                    System.out.println("Explorateur communicatif : évite la case de trésor à (" + newLine + ", " + newColumn + ").");
+                    return;
+                }
+            }
+
+            // Mise à jour de la position
+            System.out.println("Nouvelle position : (" + newLine + ", " + newColumn + ")");
+            updatePosition(newColumn, newLine);
+
+            // Si un trésor est présent sur le bloc, le collecter (uniquement pour les explorateurs non communicatifs)
             EnvironmentElement element = Utility.getElementFromBlock(environment, newBlock);
             if (element instanceof Treasure treasure && explorer.getExplorerType() != Explorer.COMMUNICATIVE_EXPLORER) {
                 if (!treasure.isCollected()) {
@@ -266,6 +179,7 @@ public class ExplorerManager extends Thread {
             System.out.println("Déplacement non valide pour l'explorateur.");
         }
     }
+
 
 
 
@@ -366,10 +280,6 @@ public class ExplorerManager extends Thread {
         return explorer;
     }
 
-    public void setExplorer(Explorer explorer) {
-        this.explorer = explorer;
-    }
-
     private List<EnvironmentElement> scannedElements = new ArrayList<>();
     private List<Block> scanForTreasures() {
         Block currentBlock = explorer.getBlock(); // Bloc actuel de l'explorateur
@@ -419,53 +329,6 @@ public class ExplorerManager extends Thread {
 //        return treasurePositions; // Retourne les positions des trésors
     }
 
-    public void moveCommunicative() {
-        Block currentBlock = explorer.getBlock();
-        int newLine = currentBlock.getLine();
-        int newColumn = currentBlock.getColumn();
-
-        boolean moved = false;
-        int attempts = 0; // Limite le nombre d'essais pour éviter une boucle infinie
-
-        while (!moved && attempts < 4) { // Maximum 4 directions à essayer
-            int direction = Utility.getRandomNumber(0, 3); // Générer une direction aléatoire
-            System.out.println("Essai de direction : " + direction);
-
-            switch (direction) {
-                case 0: newLine = currentBlock.getLine() - 1; newColumn = currentBlock.getColumn(); break; // Haut
-                case 1: newLine = currentBlock.getLine() + 1; newColumn = currentBlock.getColumn(); break; // Bas
-                case 2: newLine = currentBlock.getLine(); newColumn = currentBlock.getColumn() - 1; break; // Gauche
-                case 3: newLine = currentBlock.getLine(); newColumn = currentBlock.getColumn() + 1; break; // Droite
-            }
-
-            // Vérifie que le déplacement est valide et non bloqué par un obstacle
-            if (isValidMove(newLine, newColumn)) {
-                Block newBlock = environment.getBlock(newLine, newColumn);
-
-                if (!Utility.isObstacleByBlock(newBlock, environment)) {
-                    updatePosition(newColumn, newLine);
-                    System.out.println("Explorateur s'est déplacé vers : (" + newLine + ", " + newColumn + ")");
-                    moved = true; // Déplacement effectué avec succès
-                } else {
-                    System.out.println("Obstacle détecté à (" + newLine + ", " + newColumn + "). Essai d'une autre direction.");
-                }
-            } else {
-                System.out.println("Déplacement non valide pour la position (" + newLine + ", " + newColumn + ").");
-            }
-
-            attempts++;
-        }
-
-        if (!moved) {
-            System.out.println("Aucune direction valide trouvée pour l'explorateur.");
-        }
-    }
-
-    private List<EnvironmentElement> receivedElements= new ArrayList<>();
-    private void inform(List<Block> treasurePositions) {
-        System.out.println("Cognitif a reçu les positions des trésors : " + treasurePositions);
-    }
-
     private void inform(Treasure treasure) {
         System.out.println("Cognitif a reçu les positions des trésors : " + treasure.getBlock());
     }
@@ -473,24 +336,4 @@ public class ExplorerManager extends Thread {
     private void setTreasure(Treasure treasure){
         this.treasure = treasure;
     }
-
-    //    public int getTrainId() {
-//        return train.getId();
-//    }
-//
-//    public int getPosition() {
-//        return train.getCurrentPosition();
-//    }
-//
-//    public BlockManager getBlockManager() {
-//        return blockManager;
-//    }
-//
-//    public void setBlockManager(BlockManager blockManager) {
-//        this.blockManager = blockManager;
-//    }
-//
-//    public boolean isAtTerminus() {
-//        return atTerminus;
-//    }
 }

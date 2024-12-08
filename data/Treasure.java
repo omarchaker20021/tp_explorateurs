@@ -15,7 +15,7 @@ public class Treasure extends Objet  {
     public void collect() {
         if (!collected) {
             this.collected = true;
-            System.out.println("Trésor collecté !");
+            //System.out.println("Trésor collecté !");
         }
     }
 }
